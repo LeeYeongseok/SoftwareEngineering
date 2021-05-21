@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="num">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="location">
+        <item>서울</item>
+        <item>부산</item>
+        <item>제주</item>
+    </string-array>
+
+    <string-array name="dLocation_Seoul">
+        <item>강남/서초</item>
+        <item>강동/송파</item>
+        <item>강북/도봉/노원</item>
+        <item>강서/양천</item>
+        <item>관악/동작</item>
+        <item>마포/서대문/은평</item>
+        <item>성동/광진</item>
+        <item>성북/종로</item>
+        <item>영등포/구로/금천</item>
+        <item>용산/중구</item>
+        <item>중랑/동대문</item>
+    </string-array>
+
+    "강서", "기장", "사하/사상", "서구/동구/중구/영동", "진구/연제/동래",
+    "북구/금정", "해운대", "남구/수영"));
+    <string-array name="dLocation_Busan">
+        <item>강서</item>
+        <item>기장</item>
+        <item>남구/수영</item>
+        <item>사하/사상</item>
+        <item>서구/동구/중구/영동</item>
+        <item>진구/연제/동래</item>
+        <item>북구/금정</item>
+        <item>해운대</item>
+    </string-array>
+
+    <string-array name="dLocation_Jeju">
+        <item>구좌</item>
+        <item>남원</item>
+        <item>서귀포</item>
+        <item>성산</item>
+        <item>애월</item>
+        <item>안덕/대정</item>
+        <item>조천</item>
+        <item>제주</item>
+        <item>조천</item>
+        <item>표선</item>
+        <item>한림/한경</item>
+    </string-array>
+</resources>
+

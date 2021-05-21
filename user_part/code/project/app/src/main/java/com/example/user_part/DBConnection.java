@@ -1,0 +1,23 @@
+package com.example.user_part;
+
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class DBConnection extends StringRequest {
+
+    final static private String URL = ""; //서버 주소
+
+    //params: 선택한 방을 다른 class로부터 받아옴
+    public DBConnection(Response.Listener<String> listener){
+        super(Method.POST, URL, listener, null);
+    }
+
+    //방 정보 전달 받기
+    /*public ??? getParams(){
+        return ???
+    }*/
+
+}
