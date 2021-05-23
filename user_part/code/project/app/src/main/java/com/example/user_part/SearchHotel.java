@@ -26,7 +26,7 @@ import java.util.Collections;
 
 public class SearchHotel extends AppCompatActivity {
 
-    RsvCond rsvCond = new RsvCond();
+        RsvCond rsvCond = new RsvCond();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

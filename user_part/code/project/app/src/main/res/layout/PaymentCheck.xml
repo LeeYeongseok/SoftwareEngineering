@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectRoom"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/rsvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="예약정보 확인"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/hotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HOTEL : "/>
+
+        <EditText
+            android:id="@+id/hotelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="호텔 이름" />
+    </LinearLayout> //hotel 한줄
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ROOM : "/>
+
+        <EditText
+            android:id="@+id/roomNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="방 번호" />
+    </LinearLayout> //room 한줄
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/Noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification : "/>
+
+        <EditText
+            android:id="@+id/notiInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="안내 사항" />
+    </LinearLayout> //location 한줄
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/Option"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:text="option : "/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/OP1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="OP1" />
+
+            <EditText
+                android:id="@+id/OP2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="OP2" />
+
+            <EditText
+                android:id="@+id/OP3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="OP3" />
+
+
+        </LinearLayout> //옵션 리스트 vertical
+    </LinearLayout> //option horizontal
+    //-----------------------------------------
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_vertical"
+            android:text="price : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/priceData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="price" />
+
+    </LinearLayout> //price horizontal
+
+    //----------------------------------------------------
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:text="결제수단"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/skyblue"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:text="무통장 입금" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/skyblue"
+                android:layout_marginRight="10dp"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:text="카드 결제" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/skyblue"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:text="핸드폰 결제" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginRight="10dp"
+                android:background="@color/skyblue"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:text="기타 결제" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

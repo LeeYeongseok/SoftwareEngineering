@@ -12,6 +12,7 @@ public class MeetCond {
     private String location; //위치
     private String roomType; //방 타입
     private boolean meal;   //식사
+    private int mealPrice;   //식사가격
     private int maxHeadCnt; //최대 인수
 
     public MeetCond(String hotelName,
@@ -24,6 +25,7 @@ public class MeetCond {
                     String location,
                     String roomType,
                     boolean meal,
+                    int mealPrice,
                     int maxHeadCnt) {
         this.hotelName = hotelName;
         this.priceOfDay = priceOfDay;
@@ -35,6 +37,7 @@ public class MeetCond {
         this.location = location;
         this.exFacility = exFacility;
         this.meal = meal;
+        this.mealPrice = mealPrice;
         this.maxHeadCnt = maxHeadCnt;
     }
 
