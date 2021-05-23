@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
@@ -24,11 +26,7 @@ import java.util.Collections;
 
 public class SearchHotel extends AppCompatActivity {
 
-    public String date;
-    public int num;
-    public String location;
-    public String dlocation;
-
+    RsvCond rsvCond = new RsvCond();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +50,7 @@ public class SearchHotel extends AppCompatActivity {
         dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                date = date_list.get(position);
+                rsvCond.setDate(date_list.get(position));
             }
 
             @Override
@@ -69,7 +67,7 @@ public class SearchHotel extends AppCompatActivity {
         numSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                num = Integer.parseInt(numSpinner.getSelectedItem().toString()); //인원 수 저장
+                rsvCond.setNum(Integer.parseInt(numSpinner.getSelectedItem().toString())); //인원 수 저장
             }
 
             @Override
@@ -90,8 +88,7 @@ public class SearchHotel extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                location = locationSpinner.getSelectedItem().toString();
-                System.out.println(location);
+                rsvCond.setLoc(locationSpinner.getSelectedItem().toString());
 
                 switch(position){
                     case 0:
@@ -108,7 +105,7 @@ public class SearchHotel extends AppCompatActivity {
                 dLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        dlocation = dLocationSpinner.getSelectedItem().toString(); //세부 위치 저장
+                        rsvCond.setdLoc(dLocationSpinner.getSelectedItem().toString()); //세부 위치 저장
                     }
 
                     @Override
@@ -130,7 +127,10 @@ public class SearchHotel extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Response.Listener<String> responseListen = new Response.Listener<String>() {
+                Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
+                SearchHotel.this.startActivity(intent);
+                finish();
+                /*Response.Listener<String> responseListen = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
@@ -143,9 +143,12 @@ public class SearchHotel extends AppCompatActivity {
                             }
                         } catch(Exception e){
 
-                        };
+                        }
                     }
                 };
+                DBConnection dbConnection = new DBConnection(rsvCond, responseListen);
+                RequestQueue queue = Volley.newRequestQueue(SearchHotel.this);
+                queue.add(dbConnection);*/
             }
         });
 
