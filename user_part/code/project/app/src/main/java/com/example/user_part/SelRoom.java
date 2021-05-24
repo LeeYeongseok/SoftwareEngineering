@@ -1,3 +1,5 @@
+package com.example.user_part;
+
 public class SelRoom {
     private String hotelName; //호텔 이름
     private int priceOfDay; //1박 당 가격
@@ -14,19 +16,20 @@ public class SelRoom {
     private int maxHeadCnt; //최대 인수
 
     public SelRoom(String hotelName,
-                    int priceOfDay,
-                    float grade,
-                    String review,
-                    int picture,
-                    String iTime,
-                    String oTime,
-                    String exFacility,
-                    String location,
-                    String roomType,
-                    boolean meal,
-                    int mealPrice,
-                    int maxHeadCnt) {
+                   int priceOfDay,
+                   float grade,
+                   String review,
+                   int picture,
+                   String iTime,
+                   String oTime,
+                   String exFacility,
+                   String location,
+                   String roomType,
+                   boolean meal,
+                   int mealPrice,
+                   int maxHeadCnt) {
         this.hotelName = hotelName;
+        this.priceOfDay = priceOfDay;
         this.review = review;
         this.grade = grade;
         this.picture = picture;
@@ -39,6 +42,10 @@ public class SelRoom {
         this.mealPrice = mealPrice;
         this.maxHeadCnt = maxHeadCnt;
     }
+
+    public SelRoom(int i, int i1, int i2, String a호텔, String a호텔1, boolean b, String oTime, boolean b1, boolean b2, boolean b3, boolean b4, int i3, int i4) {
+    }
+
     public String getLocation() {
         return location;
     }
@@ -127,11 +134,11 @@ public class SelRoom {
         this.meal = meal;
     }
 
-    public int mealPrice() {
+    public int getMealPrice() {
         return mealPrice;
     }
 
-    public void mealPrice(int maxHeadCnt) {
+    public void setMealPrice(int maxHeadCnt) {
         this.mealPrice = mealPrice;
     }
 
@@ -142,64 +149,4 @@ public class SelRoom {
     public void setMaxHeadCnt(int maxHeadCnt) {
         this.maxHeadCnt = maxHeadCnt;
     }
-}
-
-public class RoomOpt { //사용자가 선택하는 옵션
-    private int stayNight; //머무는 일 수
-    private int headCnt; //인원
-    private boolean meal; //식사
-
-    public RoomOpt(int stayNight,
-                   int headCnt,
-                   boolean meal) {
-
-        this.stayNight = stayNight;
-        this.headCnt = headCnt;
-        this.meal = meal;
-    }
-    public int stayNight() {
-        return stayNight;
-    }
-
-    public void stayNight(int stayNight) {
-        this.stayNight = stayNight;
-    }
-
-    public int headCnt() {
-        return headCnt;
-    }
-
-    public void headCnt(int headCnt) {
-        this.headCnt = headCnt;
-    }
-
-    public boolean isMeal() {
-        return meal;
-    }
-
-    public void setMeal(boolean meal) {
-        this.meal = meal;
-    }
-}
-
-
-public class Calculator {
-    private RoomOpt op;  // 방 옵션
-    private SelRoom sel; // 선택한 방
-
-    private int calculate(RoomOpt op, SelRoom sel){
-        private int prc;
-        private int priceOfDay = sel.getPriceOfDay();
-        private int stayNight =  op.stayNight();
-        private int headCnt = op.headCnt();
-        private int mealPrice = sel.mealPrice();
-        private boolean isMeal = op.isMeal();
-
-        prc = priceOfDay*stayNight;
-        if(isMeal){
-            prc += mealPrice*stayNight*headCnt;
-        }
-        return prc;
-    }
-
 }
