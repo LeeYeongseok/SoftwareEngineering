@@ -2,4 +2,8 @@
     <string name="app_name">user_part</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name= "notiSent">환불 정책\n-예매 후 7일 이내 환불 수수료 없음. \n-예매 후 8일 ~ 예약일 10일 전 결제 금액의 5% \n-예약일 9일 전 ~ 7일 전 결제 금액의 10% \n
+        -예약일 6일 전 ~ 3일 전 결제 금액의 20% \n-예약일 2일 전 ~ 1일 전 결제 금액의 30% \n-예약 당일 환불 불가</string>
+
 </resources>

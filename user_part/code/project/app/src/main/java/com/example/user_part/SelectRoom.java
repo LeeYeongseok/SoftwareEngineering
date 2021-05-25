@@ -1,5 +1,6 @@
 package com.example.user_part;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SelectRoom extends AppCompatActivity {
 
+    SelRoom selroom = new SelRoom("a호텔", 50000, (float) 4.0,"굉장히 좋은 방이네",
+            R.drawable.room1, "15:00", "11:00", "수영장", "서울시 동작구 흑석로 84",
+            "203", true, 7000,1); //임시데이터터
+    RoomOpt roomopt = new RoomOpt (3,5,false,0); //임시데이터
+    public static Context context_SelectRoom;
     ImageView hotelImage;
     TextView tv_hotelNameContents;
     TextView tv_RoomContent;
@@ -29,28 +35,25 @@ public class SelectRoom extends AppCompatActivity {
     RadioGroup rg_mealSel;
     RadioButton radioButton_op1;
     RadioButton radioButton_op2;
-    RadioButton radioButton_op3;
     TextView tv_totalPriceContent;
     Button button_reserve;
     Spinner sp_mealCnt;
-
-
-
-
+    int intTotalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_room);
+        context_SelectRoom = this;
 
 
-        SelRoom selroom = new SelRoom("a호텔", 50000, (float) 4.0,"굉장히 좋은 방이네", R.drawable.room1, "15:00", "11:00", "수영장", "서울시 동작구 흑석로 84", "203", true, 7000,1);
-        RoomOpt roomopt = new RoomOpt (3,5,false,0);
+
         Calculator calculator = new Calculator(roomopt, selroom);
 
 
        tv_totalPriceContent= findViewById(R.id.tv_totalPriceContent);
-        String totalPrice =  String.valueOf(calculator.calculate());
+        intTotalPrice = calculator.calculate();
+        String totalPrice =  String.valueOf(intTotalPrice);
         tv_totalPriceContent.setText(totalPrice + "원");
 
         hotelImage = findViewById(R.id.hotelImage);
@@ -72,6 +75,7 @@ public class SelectRoom extends AppCompatActivity {
 
         tv_PriceContent= findViewById(R.id.tv_PriceContent);
         String Price = String.valueOf(selroom.getPriceOfDay());
+        intTotalPrice = selroom.getPriceOfDay();
         tv_PriceContent.setText(Price + "원");
 
         tv_FacilityContent= findViewById(R.id.tv_FacilityContent);
@@ -105,7 +109,8 @@ public class SelectRoom extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.radioButton_op1) {//식사 추가 X
                     roomopt.setMeal(false);
-                    String totalPrice2 = String.valueOf(calculator.calculate());
+                    intTotalPrice = calculator.calculate();
+                    String totalPrice2 =  String.valueOf(intTotalPrice);
                     tv_totalPriceContent.setText(totalPrice2 + "원");
                 }else if(checkedId == R.id.radioButton_op2){ //식사 추가 시
                     sp_mealCnt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -114,8 +119,8 @@ public class SelectRoom extends AppCompatActivity {
                             roomopt.setMeal(true);
                             String mealResult = parent.getItemAtPosition(position).toString();
                             roomopt.setMealCnt(Integer.parseInt(mealResult));
-
-                            String totalPrice3 =  String.valueOf(calculator.calculate());
+                            intTotalPrice = calculator.calculate();
+                            String totalPrice3 =  String.valueOf(intTotalPrice);
                             tv_totalPriceContent.setText(totalPrice3 + "원");
                         }
                         @Override
@@ -133,6 +138,7 @@ public class SelectRoom extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectRoom.this , PaymentCheck.class );
+                intent.putExtra("totalPrice",intTotalPrice);
                 startActivity(intent);
             }
         });

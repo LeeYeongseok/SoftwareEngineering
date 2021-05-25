@@ -2,10 +2,10 @@ package com.example.user_part;
 
 public class RsvCond {
 
-    private String date;
-    private int num;
-    private String location;
-    private String dlocation;
+    private String date; //날짜
+    private int num; //인원수
+    private String location; //시/도구
+    private String dlocation; //
 
     public RsvCond(){
     }

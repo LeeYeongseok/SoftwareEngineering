@@ -2,6 +2,7 @@ package com.example.user_part;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +27,14 @@ import java.util.Collections;
 
 public class SearchHotel extends AppCompatActivity {
 
+    public static Context context_SearchHotel;
         RsvCond rsvCond = new RsvCond();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        context_SearchHotel = this;
 
         //날짜
         Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
