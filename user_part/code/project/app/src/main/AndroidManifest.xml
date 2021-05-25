@@ -18,6 +18,9 @@
         </activity>
 
         <activity android:name=".ShowRoom">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SearchHotel" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +28,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SelectRoom">
+        <activity
+                android:name=".SelectRoom"
+                android:parentActivityName = ".ShowRoom" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +38,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PaymentCheck">
+        <activity
+                android:name=".PaymentCheck"
+                android:parentActivityName = ".SelectRoom" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

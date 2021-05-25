@@ -7,14 +7,9 @@ public class RoomOpt { //사용자가 선택하는 옵션
     private int mealCnt; //끼니
 
     public RoomOpt(int stayNight,
-                   int headCnt,
-                   boolean meal,
-                   int mealCnt) {
-
+                   int headCnt) {
         this.stayNight = stayNight;
         this.headCnt = headCnt;
-        this.meal = meal;
-        this.mealCnt = mealCnt;
     }
     public int getStayNight() {
         return stayNight;

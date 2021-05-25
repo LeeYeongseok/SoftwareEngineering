@@ -3,6 +3,7 @@ package com.example.user_part;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,14 +14,20 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SelectRoom extends AppCompatActivity {
 
-    SelRoom selroom = new SelRoom("a호텔", 50000, (float) 4.0,"굉장히 좋은 방이네",
+    /*SelRoom selroom = new SelRoom("a호텔", 50000, (float) 4.0,"굉장히 좋은 방이네",
             R.drawable.room1, "15:00", "11:00", "수영장", "서울시 동작구 흑석로 84",
-            "203", true, 7000,1); //임시데이터터
-    RoomOpt roomopt = new RoomOpt (3,5,false,0); //임시데이터
+            "203", true, 7000,1); //임시데이터터*/
+    /*RoomOpt roomopt = new RoomOpt (3,5); //임시데이터*/
+
+    MeetCond selroom = ((ShowRoom)ShowRoom.context_ShowRoom).getMeetCond();
+    RsvCond rsvCond = ((SearchHotel)SearchHotel.context_SearchHotel).getRsvCond();
+    RoomOpt roomopt = new RoomOpt(rsvCond.getStayNight(), rsvCond.getNum());
+
     public static Context context_SelectRoom;
     ImageView hotelImage;
     TextView tv_hotelNameContents;
@@ -47,11 +54,9 @@ public class SelectRoom extends AppCompatActivity {
         context_SelectRoom = this;
 
 
-
         Calculator calculator = new Calculator(roomopt, selroom);
 
-
-       tv_totalPriceContent= findViewById(R.id.tv_totalPriceContent);
+        tv_totalPriceContent= findViewById(R.id.tv_totalPriceContent);
         intTotalPrice = calculator.calculate();
         String totalPrice =  String.valueOf(intTotalPrice);
         tv_totalPriceContent.setText(totalPrice + "원");
@@ -143,5 +148,15 @@ public class SelectRoom extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.home){
+            finish();
+            //NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        else return super.onOptionsItemSelected(item);
     }
 }

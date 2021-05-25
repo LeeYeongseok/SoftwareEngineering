@@ -1,5 +1,6 @@
 package com.example.user_part;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -13,13 +14,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
-import java.sql.Date;
+import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +24,7 @@ import java.util.Collections;
 public class SearchHotel extends AppCompatActivity {
 
     public static Context context_SearchHotel;
-        RsvCond rsvCond = new RsvCond();
+    private RsvCond rsvCond = new RsvCond();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,24 +32,72 @@ public class SearchHotel extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         context_SearchHotel = this;
 
-        //날짜
-        Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //체크인-체크아웃 날짜
+        Spinner dateCheckinSpinner = (Spinner) findViewById(R.id.dateCheckinSpinner);
+        Spinner dateCheckoutSpinner = (Spinner) findViewById(R.id.dateCheckoutSpinner);
+
         Calendar today = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
-        ArrayList<String> date_list = new ArrayList<String>(Collections.singleton(dateFormat.format(new Date(today.getTimeInMillis()))));
+
+        ArrayList<String> date_checkinlist = new ArrayList<String>(Collections.singleton(dateFormat.format(new Date(today.getTimeInMillis()))));
 
         for(int i=1; i<10; i++){
             Calendar new_date = Calendar.getInstance();
             new_date.add(Calendar.DATE, i);
-            date_list.add(dateFormat.format(new Date(new_date.getTimeInMillis())));
+            date_checkinlist.add(dateFormat.format(new Date(new_date.getTimeInMillis())));
         }
 
-        Adapter dateAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, date_list);
-        dateSpinner.setAdapter((SpinnerAdapter) dateAdapter);
-        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Adapter dateCheckinAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, date_checkinlist);
+
+        dateCheckinSpinner.setAdapter((SpinnerAdapter) dateCheckinAdapter);
+        dateCheckinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                rsvCond.setDate(date_list.get(position));
+                rsvCond.setCheckin_date(date_checkinlist.get(position));
+                try {
+                    Date checkin_date = (Date) dateFormat.parse(date_checkinlist.get(position));
+                    ArrayList<String> date_checkoutlist = new ArrayList<String>();
+                    for(int i=1; i<10; i++){
+                        Calendar new_date = Calendar.getInstance();
+                        new_date.setTime(checkin_date);
+                        new_date.add(Calendar.DATE, i);
+                        date_checkoutlist.add(dateFormat.format(new Date(new_date.getTimeInMillis())));
+                    }
+
+                    Adapter dateCheckoutAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, date_checkoutlist);
+                    dateCheckoutSpinner.setAdapter((SpinnerAdapter) dateCheckoutAdapter);
+                    dateCheckoutSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            rsvCond.setCheckout_date(date_checkoutlist.get(position));
+                            try {
+                                Date checkout_date = (Date) dateFormat.parse(date_checkoutlist.get(position));
+                                int diff = (int) Math.abs((checkout_date.getTime()-checkin_date.getTime())/(24*60*60*1000));
+                                rsvCond.setStayNight(diff);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e){
+                    System.out.println(rsvCond.getCheckin_date());
+                    System.out.println("왜 때문에 null?");
+                }
+
+
             }
 
             @Override
@@ -61,7 +105,6 @@ public class SearchHotel extends AppCompatActivity {
 
             }
         });
-
 
         //인원 수
         Spinner numSpinner = (Spinner) findViewById(R.id.numSpinner);
@@ -91,7 +134,7 @@ public class SearchHotel extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                rsvCond.setLoc(locationSpinner.getSelectedItem().toString());
+                rsvCond.setLocation(locationSpinner.getSelectedItem().toString());
 
                 switch(position){
                     case 0:
@@ -108,7 +151,7 @@ public class SearchHotel extends AppCompatActivity {
                 dLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        rsvCond.setdLoc(dLocationSpinner.getSelectedItem().toString()); //세부 위치 저장
+                        rsvCond.setDlocation(dLocationSpinner.getSelectedItem().toString()); //세부 위치 저장
                     }
 
                     @Override
@@ -132,7 +175,7 @@ public class SearchHotel extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
                 SearchHotel.this.startActivity(intent);
-                finish();
+                //finish();
                 /*Response.Listener<String> responseListen = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -155,6 +198,10 @@ public class SearchHotel extends AppCompatActivity {
             }
         });
 
+    }
+
+    public RsvCond getRsvCond() {
+        return rsvCond;
     }
 
 }

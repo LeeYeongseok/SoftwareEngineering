@@ -13,6 +13,23 @@ public class MeetCond {
     private String roomType; //방 타입
     private boolean meal;   //식사
     private int mealPrice;   //식사가격
+
+    public String getiTime() {
+        return iTime;
+    }
+
+    public void setiTime(String iTime) {
+        this.iTime = iTime;
+    }
+
+    public int getMealPrice() {
+        return mealPrice;
+    }
+
+    public void setMealPrice(int mealPrice) {
+        this.mealPrice = mealPrice;
+    }
+
     private int maxHeadCnt; //최대 인수
 
     public MeetCond(String hotelName,

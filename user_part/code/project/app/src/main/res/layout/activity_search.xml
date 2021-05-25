@@ -16,15 +16,22 @@
         android:layout_marginTop="0dp"
         android:layout_gravity="center"
         android:gravity="left"
-        android:paddingLeft="45dp"
+        android:paddingLeft="15dp"
         android:paddingRight="10dp">
 
         <Spinner
-            android:layout_width="140dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:id="@+id/dateSpinner"></Spinner>
+            android:id="@+id/dateCheckinSpinner"></Spinner>
+
+        <Spinner
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/dateCheckoutSpinner"></Spinner>
 
         <Spinner
             android:layout_width="80dp"

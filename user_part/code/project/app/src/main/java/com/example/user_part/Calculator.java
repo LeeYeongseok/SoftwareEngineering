@@ -5,9 +5,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Calculator {
 
     RoomOpt op;  // 방 옵션
-    SelRoom sel; // 선택한 방
+    MeetCond sel; // 선택한 방
 
-    public Calculator(RoomOpt op, SelRoom sel){
+    public Calculator(RoomOpt op, MeetCond sel){
         this.op = op;
         this.sel = sel;
     }
@@ -18,10 +18,10 @@ public class Calculator {
     RoomOpt getop(){
         return op;
     }
-    void setSel(SelRoom sel){
+    void setSel(MeetCond sel){
         this.sel = sel;
     }
-    SelRoom getSel(){
+    MeetCond getSel(){
         return sel;
     }
 
@@ -31,7 +31,7 @@ public class Calculator {
        int priceOfDay = sel.getPriceOfDay();
        int stayNight =  op.getStayNight();
        int mealCnt = op.getMealCnt();
-        int mealPrice = sel.getMealPrice();
+       int mealPrice = sel.getMealPrice();
        boolean isMeal = op.isMeal();
 
         prc = priceOfDay * stayNight;

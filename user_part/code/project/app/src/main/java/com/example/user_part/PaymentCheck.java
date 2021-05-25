@@ -2,17 +2,20 @@ package com.example.user_part;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class PaymentCheck extends AppCompatActivity {
 
-  //RsvCond rsvCond = ((SearchHotel)SearchHotel. context_SearchHotel).rsvCond;
-  SelRoom selRoom = ((SelectRoom)SelectRoom. context_SelectRoom).selroom;
+  RsvCond rsvCond = ((SearchHotel)SearchHotel.context_SearchHotel).getRsvCond();
+  MeetCond selRoom = ((SelectRoom)SelectRoom. context_SelectRoom).selroom;
   RoomOpt roomOpt = ((SelectRoom)SelectRoom. context_SelectRoom).roomopt;
    TextView tv_hotelName;
    TextView tv_roomNum;
@@ -39,6 +42,9 @@ public class PaymentCheck extends AppCompatActivity {
         Intent intent = getIntent();
         int totalPrice = intent.getIntExtra("totalPrice",0);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
      tv_hotelName = findViewById(R.id.tv_hotelName);
      tv_hotelName.setText(selRoom.getHotelName());
 
@@ -46,17 +52,17 @@ public class PaymentCheck extends AppCompatActivity {
      tv_roomNum.setText(selRoom.getRoomType());
 
      tv_headContent = findViewById(R.id.tv_headContent);
-   //  String num = String.valueOf(rsvCond.getNum());
-    // tv_headContent.setText(num);
+     String num = String.valueOf(rsvCond.getNum());
+     tv_headContent.setText(num);
 
      tv_inDate = findViewById(R.id.tv_inDate);
-    // tv_inDate.setText(rsvCond.getDate());
+     tv_inDate.setText(rsvCond.getCheckin_date());
 
      tv_inTime = findViewById(R.id.tv_inTime);
      tv_inTime.setText(selRoom.getITime());
 
      tv_outDate = findViewById(R.id.tv_outDate);
-     //rsvCond수정후 setText해야함
+     tv_outDate.setText(rsvCond.getCheckout_date());
 
      tv_outTime = findViewById(R.id.tv_outTime);
      tv_outTime.setText(selRoom.getoTime());
@@ -108,5 +114,15 @@ public class PaymentCheck extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.home){
+            finish();
+            //NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        else return super.onOptionsItemSelected(item);
     }
 }
