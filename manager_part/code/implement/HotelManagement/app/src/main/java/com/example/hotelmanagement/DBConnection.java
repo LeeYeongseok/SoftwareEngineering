@@ -1,11 +1,22 @@
 package com.example.hotelmanagement;
 
+import java.util.ArrayList;
+
 public class DBConnection {
 
     private RoomInfo room;
+    private RsvInfo rsv;
+    private ArrayList<String> IDList = new ArrayList<String>();
+    private ArrayList<RsvInfo> RsvList = new ArrayList<RsvInfo>();
 
     public DBConnection() {
 
+    }
+    public ArrayList<String> getIDList(){
+        return IDList;
+    }
+    public ArrayList<RsvInfo> getRsv(){
+        return RsvList;
     }
     public void Rsv_Record(boolean d) {
         // 예약에 대한 수락or거절에 대해 DB에 전달

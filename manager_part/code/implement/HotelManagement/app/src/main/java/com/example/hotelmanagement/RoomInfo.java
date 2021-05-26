@@ -1,7 +1,7 @@
 package com.example.hotelmanagement;
 
 public class RoomInfo {
-
+    private int Room_Num;
     private int priceOfDay; //1박 가격
     private String iTime; //체크인 시간??
     private String oTime; //체크아웃 시간??
@@ -12,6 +12,8 @@ public class RoomInfo {
 
     }
 
+    public int getRoom_Num(){return Room_Num;}
+    public void setRoom_Num(int rsv_Num){this.Room_Num=rsv_Num;}
     public int getPrice() {
         return priceOfDay;
     }
