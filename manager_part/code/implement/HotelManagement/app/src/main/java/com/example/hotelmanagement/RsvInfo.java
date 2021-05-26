@@ -2,13 +2,14 @@ package com.example.hotelmanagement;
 
 public class RsvInfo {
 
-    private int Rsv_Num;
-    private String iTime;
-    private String oTime;
-    private boolean meal;
-    private String checkIn_date;
-    private String checkOut_date;
-    private int NumOfPeople;
+    private int Rsv_Num; //예약번호
+    private String iTime; //체크인 시간
+    private String oTime; //체크아웃 시간
+    private boolean meal; //식사 여부
+    private String checkIn_date; //체크인 날짜
+    private String checkOut_date; //체크아웃 날짜
+    private int NumOfPeople; //예약 인원
+    private boolean d; //예약 승인 혹은 거절에 대한 여부
 
     public int getRsv_Num(){return Rsv_Num;}
     public void setRsv_Num(int Rsv_Num){this.Rsv_Num=Rsv_Num;}
@@ -24,5 +25,7 @@ public class RsvInfo {
     public void setCheckOut_date(String checkOut_date){this.checkOut_date=checkOut_date;}
     public int getNumOfPeople(){return NumOfPeople;}
     public void setNumOfPeople(int NumOfPeople){this.NumOfPeople=NumOfPeople;}
+    public boolean getDecision(){return d;}
+    public void setDecision(boolean d){this.d=d;}
 
 }
