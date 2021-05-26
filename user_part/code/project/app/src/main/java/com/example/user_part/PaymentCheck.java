@@ -24,7 +24,6 @@ public class PaymentCheck extends AppCompatActivity {
    TextView tv_inTime;
    TextView tv_outDate;
    TextView tv_outTime;
-   TextView tv_notiInfo;
    TextView tv_OP1;
    TextView tv_OP2;
    TextView tv_OP3;
@@ -78,9 +77,6 @@ public class PaymentCheck extends AppCompatActivity {
      }
 
 
-     tv_OP2 = findViewById(R.id.tv_OP2);
-
-     tv_OP3 = findViewById(R.id.tv_OP3);
 
      tv_priceData = findViewById(R.id.tv_priceData);
      tv_priceData.setText(String.valueOf(totalPrice) +"원");

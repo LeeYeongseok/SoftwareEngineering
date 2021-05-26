@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +48,7 @@ public class SelectRoom extends AppCompatActivity {
     TextView tv_totalPriceContent;
     Button button_reserve;
     Spinner sp_mealCnt;
+    TextView tv_mealInfo;
     int intTotalPrice;
 
     @Override
@@ -97,13 +101,15 @@ public class SelectRoom extends AppCompatActivity {
         radioButton_op1= findViewById(R.id.radioButton_op1);
         radioButton_op2= findViewById(R.id.radioButton_op2);
 
+        sp_mealCnt =findViewById(R.id.sp_mealCnt);
+        tv_mealInfo = findViewById(R.id.tv_mealInfo);
+        sp_mealCnt.setVisibility(View.GONE);
+        tv_mealInfo.setVisibility(View.GONE);
 
         if(selroom.isMeal()) { //식사 옵션이 존재하면 스피너 활성화시키기 & 가격 표시하기
             String mealPrice = String.valueOf(selroom.getMealPrice());
             radioButton_op2.setText("식사 추가: " + mealPrice + "원/끼"); //가격 표시하기
 
-            sp_mealCnt =findViewById(R.id.sp_mealCnt);
-            sp_mealCnt.setEnabled(true); //스피너 활성화시키기
         }else{
             radioButton_op2.setEnabled(false);
             radioButton_op2.setText("식사 추가(식사가 제공되지 않는 호텔입니다)");
@@ -114,22 +120,30 @@ public class SelectRoom extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.radioButton_op1) {//식사 추가 X
                     roomopt.setMeal(false);
+                    sp_mealCnt.setVisibility(View.GONE);
+                    tv_mealInfo.setVisibility(View.GONE);
                     intTotalPrice = calculator.calculate();
-                    String totalPrice2 =  String.valueOf(intTotalPrice);
-                    tv_totalPriceContent.setText(totalPrice2 + "원");
-                }else if(checkedId == R.id.radioButton_op2){ //식사 추가 시
+                    tv_totalPriceContent.setText(intTotalPrice + "원");
+
+                }else if(checkedId == R.id.radioButton_op2) { //식사 추가 시
+                    sp_mealCnt.setVisibility(View.VISIBLE);
+                    tv_mealInfo.setVisibility(View.VISIBLE);
+                    roomopt.setMeal(true);
+                    intTotalPrice = calculator.calculate();
+                    tv_totalPriceContent.setText(intTotalPrice + "원");
                     sp_mealCnt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            roomopt.setMeal(true);
                             String mealResult = parent.getItemAtPosition(position).toString();
                             roomopt.setMealCnt(Integer.parseInt(mealResult));
                             intTotalPrice = calculator.calculate();
-                            String totalPrice3 =  String.valueOf(intTotalPrice);
-                            tv_totalPriceContent.setText(totalPrice3 + "원");
+                            tv_totalPriceContent.setText(intTotalPrice + "원");
                         }
+
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
+
+
                         }
                     });
                 }
@@ -142,9 +156,13 @@ public class SelectRoom extends AppCompatActivity {
        button_reserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectRoom.this , PaymentCheck.class );
-                intent.putExtra("totalPrice",intTotalPrice);
-                startActivity(intent);
+                if(radioButton_op1.isChecked() == false &&radioButton_op2.isChecked()== false) {
+                    Toast.makeText(getApplicationContext(), "식사 옵션을 선택하세요", Toast.LENGTH_SHORT).show();
+                }else{
+                        Intent intent = new Intent(SelectRoom.this, PaymentCheck.class);
+                        intent.putExtra("totalPrice", intTotalPrice);
+                        startActivity(intent);
+                    }
             }
         });
 

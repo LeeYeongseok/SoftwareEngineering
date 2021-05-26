@@ -50,7 +50,7 @@ public class SearchHotel extends AppCompatActivity {
             date_checkinlist.add(dateFormat.format(new Date(new_date.getTimeInMillis())));
         }
 
-        Adapter dateCheckinAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, date_checkinlist);
+        Adapter dateCheckinAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, date_checkinlist);
 
         dateCheckinSpinner.setAdapter((SpinnerAdapter) dateCheckinAdapter);
         dateCheckinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
