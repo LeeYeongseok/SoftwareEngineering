@@ -26,6 +26,8 @@
         </activity>
 
         <activity android:name=".NewReservation"/>
+        <activity android:name=".ManageRoom"/>
+        <activity android:name=".ManageReservation"/>
 
     </application>
 

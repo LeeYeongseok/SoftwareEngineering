@@ -11,9 +11,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val imageButton = findViewById<View>(R.id.button1) as Button
-        imageButton.setOnClickListener {
+        val new_reservation_btn = findViewById<View>(R.id.button1) as Button
+        new_reservation_btn.setOnClickListener {
             val intent = Intent(this, NewReservation::class.java)
+            startActivity(intent)
+        }
+
+        val manage_room_btn = findViewById<View>(R.id.button2) as Button
+        manage_room_btn.setOnClickListener {
+            val intent = Intent(this, ManageRoom::class.java)
+            startActivity(intent)
+        }
+
+        val manage_reservation_btn = findViewById<View>(R.id.button3) as Button
+        manage_reservation_btn.setOnClickListener {
+            val intent = Intent(this, ManageReservation::class.java)
             startActivity(intent)
         }
     }
