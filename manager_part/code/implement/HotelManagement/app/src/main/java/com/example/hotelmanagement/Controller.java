@@ -1,13 +1,18 @@
 package com.example.hotelmanagement;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Controller {
+public class Controller implements Serializable {
     DBConnection db = new DBConnection();
     RoomMenu menu;
-    ArrayList<String> IDList;
+    ArrayList<String>  IDList;
     ArrayList<RsvInfo> RsvList;
 
     boolean val;
@@ -45,6 +50,7 @@ public class Controller {
         for(String str : IDList)
             System.out.println(IDList.indexOf(str)+": "+str);
     }
+
     public boolean IsValid(String ID) {
         // 호텔 ID가 유효한가?
         boolean val = false;
@@ -112,6 +118,11 @@ public class Controller {
         boolean d = Decision.nextBoolean();
 
         rsvInfo.setDecision(d);
+    }
+
+    public ArrayList<String> gIDList() { //ArrayList<String> list
+        // DB로부터 호텔 ID 정보 받기
+        return IDList;
     }
 
 }

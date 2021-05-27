@@ -3,6 +3,7 @@ package com.example.hotelmanagement;
 public class RsvInfo {
 
     private int Rsv_Num; //예약번호
+    private int Room_Num; //방번호
     private String iTime; //체크인 시간
     private String oTime; //체크아웃 시간
     private boolean meal; //식사 여부
