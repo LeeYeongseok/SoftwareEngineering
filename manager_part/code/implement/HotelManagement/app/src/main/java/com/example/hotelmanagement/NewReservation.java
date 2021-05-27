@@ -15,6 +15,8 @@ import java.util.ArrayList;
 public class NewReservation extends AppCompatActivity {
 
     ArrayList<String> rlist = new ArrayList<String>();
+    ArrayList<RsvInfo> rsvlist;
+    Controller controller = new Controller();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +24,12 @@ public class NewReservation extends AppCompatActivity {
         setContentView(R.layout.new_reservation);
 
         Intent intent = getIntent();
+        rsvlist = controller.checkReservation();
 
-        for (int i = 0; i<15; i++)
-            rlist.add("Reservation " + Integer.toString(i+1));
+        for(RsvInfo rsv : rsvlist)
+            rlist.add("Reservation " + Integer.toString(rsv.getRsv_Num()));
+        //for (int i = 0; i<15; i++)
+          //  rlist.add("Reservation " + Integer.toString(i+1));
 
         ArrayAdapter adpater = new ArrayAdapter(this, android.R.layout.simple_list_item_1, rlist);
         ListView listView = (ListView) findViewById(R.id.listview);

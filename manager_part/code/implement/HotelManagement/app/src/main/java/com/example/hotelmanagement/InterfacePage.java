@@ -7,6 +7,7 @@ public class InterfacePage {
 
     int menuChoice;
     RoomInfo room = new RoomInfo();
+    Controller controller = new Controller();
     int rsvDecision;
     String pageName;
 
