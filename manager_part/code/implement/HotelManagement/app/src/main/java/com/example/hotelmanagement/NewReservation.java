@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class NewReservation extends AppCompatActivity {
 
+    ArrayList<String> rlist = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +23,22 @@ public class NewReservation extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        ArrayList<String> rlist = new ArrayList<String>();
         for (int i = 0; i<15; i++)
-            rlist.add("null");
+            rlist.add("Reservation " + Integer.toString(i+1));
 
         ArrayAdapter adpater = new ArrayAdapter(this, android.R.layout.simple_list_item_1, rlist);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adpater);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ReservationPopup.class);
+                /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
+                intent.putExtra("data", rlist.get(position));
+                startActivityForResult(intent, 1);
+            }
+        });
     }
+
 }
