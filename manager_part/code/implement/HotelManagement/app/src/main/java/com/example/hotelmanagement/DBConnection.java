@@ -53,16 +53,18 @@ public class DBConnection {
 
     public void setRsvList(ArrayList<RsvInfo> rsvList){
         for(RsvInfo rsv : rsvList){
-
+            //
         }
         this.RsvList = rsvList;
+        Data.update_RsvList(this.RsvList);
     }
 
     public void setRoomList(ArrayList<RoomInfo> roomList){
         this.RoomList = roomList;
+        Data.update_RoomList(this.RoomList);
     }
 
-    public void Rsv_Record(ArrayList<RsvInfo> rsvInfo) {
+    public void Rsv_Record(ArrayList<RsvInfo> rsvInfo) { //아마 안쓸지도..
         for (RsvInfo one_rsv : rsvInfo) {
             if (one_rsv.getDecision() == false)
                 reject_RsvNum.add(one_rsv.getRsv_Num()); // 거절된 예약에 대한 리스트 작성
@@ -74,19 +76,47 @@ public class DBConnection {
         for (Integer one_rsvNum : reject_RsvNum) System.out.println(one_rsvNum);
         System.out.println("\nAccept Reservation: ");
         for (Integer one_rsvNum : accept_RsvNum) System.out.println(one_rsvNum);
+
+        Data.update_RsvList(this.RsvList);
     }
 
-    public void Room_Record(RoomInfo roomInfo) {
+    public void Rsv_Record_v2(int index, boolean d){
+        this.RsvList.get(index).setDecision(d);
+        Data.update_RoomList(this.RoomList);
+    }
+    public void Room_add(RoomInfo roomInfo){
+        this.RoomList.add(roomInfo);
+        Data.update_RoomList(this.RoomList);
+    }
+    public void Room_modify(ArrayList<RoomInfo> roomlist) {
         // 입력 혹은 수정된 방 정보에 대한 정보 전달
-        System.out.println("Room Number: "+roomInfo.getRoom_Num());
+
+        /*System.out.println("Room Number: "+roomInfo.getRoom_Num());
         System.out.println("Room Type: "+roomInfo.getRoomType());
         System.out.println("Day of Price: "+roomInfo.getPrice());
         System.out.println("Room Capacity: "+roomInfo.getCapacity());
 
         room = roomInfo;
+
+        for(RoomInfo room : this.RoomList)
+            if(room.getRoom_Num()==roomInfo.getRoom_Num())*/
+
+        //this.RoomList=roomInfo;
+
+        this.RoomList=roomlist;
+        Data.update_RoomList(this.RoomList);
     }
     public void Room_delete(int roomNum) {
+        int index=-1;
+        for(RoomInfo room : this.RoomList)
+        {
+            if(room.getRoom_Num()==roomNum)
+                index=this.RoomList.indexOf(room);
+        }
+        if(index==-1)
+            return;
 
+        this.RoomList.remove(index);
+        Data.update_RoomList(this.RoomList);
     }
-
 }

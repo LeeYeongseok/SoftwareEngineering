@@ -98,4 +98,11 @@ public class t_data {
         rsv.setCheckOut_date(checkOut_date);
         rsv.setNumOfPeople(NumOfPeople);
     }
+
+    public void update_RoomList(ArrayList<RoomInfo> roomList){
+        this.roomList=roomList;
+    }
+    public void update_RsvList(ArrayList<RsvInfo> rsvList){
+        this.rsvList=rsvList;
+    }
 }

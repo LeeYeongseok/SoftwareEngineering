@@ -45,4 +45,10 @@ public class RoomInfo {
         this.capacity=capacity;
     }
 
+    public void setRoomList(int Room_Num, int priceOfDay, String roomType, int capacity){
+        this.Room_Num=Room_Num;
+        this.priceOfDay=priceOfDay;
+        this.roomType=roomType;
+        this.capacity=capacity;
+    }
 }

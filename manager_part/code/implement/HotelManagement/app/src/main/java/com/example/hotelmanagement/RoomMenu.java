@@ -1,10 +1,13 @@
 package com.example.hotelmanagement;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class RoomMenu {
 
     RoomInfo room;
-    //int menu=0;
     DBConnection db = new DBConnection();
+    ArrayList<RoomInfo> roomlist;
 
     public RoomMenu(int menuNum, RoomInfo roomInfo){
         switch (menuNum){
@@ -24,14 +27,27 @@ public class RoomMenu {
     public void add(RoomInfo roomInfo) {
         //room=roomInfo;
         // 함수 pageMaker에 넘겨 줄 페이지 메뉴가 리턴값 -> 메소드 리턴형 int?
-        db.Room_Record(roomInfo);
+        db.Room_add(roomInfo);
+
     }
     public void delete(int roomNum) {
         db.Room_delete(roomNum);
     }
     public void modify(RoomInfo roomInfo) {
         //room=roomInfo;
-        db.Room_Record(roomInfo);
-    }
+        int index=-1;
+        roomlist = db.getRoomList();
+        for(RoomInfo room : roomlist)
+        {
+            if(room.getRoom_Num()==roomInfo.getRoom_Num())
+                index = roomlist.indexOf(room);
+        }
+        if(index==-1)
+            return;
 
+        roomlist.get(index).setRoomList(roomInfo.getRoom_Num(), roomInfo.getPrice(), roomInfo.getRoomType(), roomInfo.getCapacity());
+
+        //db로 넘기기
+        db.Room_modify(roomlist);
+    }
 }
