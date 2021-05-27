@@ -29,6 +29,7 @@
         <activity android:name=".ManageRoom"/>
         <activity android:name=".ManageReservation"/>
         <activity android:name=".ReservationPopup1" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ReservationPopup2" android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

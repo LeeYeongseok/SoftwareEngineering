@@ -1,13 +1,46 @@
 package com.example.hotelmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class ManageReservation extends AppCompatActivity {
+    ListView listView;
+    private ArrayList<RsvInfo> list;
+    ReservationAdapter adapter;
+    Controller controller = new Controller();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_reservation);
+
+        Intent intent = getIntent();
+        list = controller.checkReservation();
+
+        adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ReservationPopup2.class);
+                /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
+                intent.putExtra("RsvNum", Integer.toString(list.get(position).getRsv_Num()));
+                intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
+                intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
+                intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
+                intent.putExtra("NumOfPeople", Integer.toString(list.get(position).getNumOfPeople()));
+                intent.putExtra("Meal", list.get(position).getMeal() ? "O":"X");
+                startActivity(intent);
+            }
+        });
     }
 }

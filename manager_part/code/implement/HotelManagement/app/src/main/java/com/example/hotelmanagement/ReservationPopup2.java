@@ -10,7 +10,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ReservationPopup1 extends Activity {
+public class ReservationPopup2 extends Activity {
 
     TextView txtText;
 
@@ -19,10 +19,10 @@ public class ReservationPopup1 extends Activity {
         super.onCreate(savedInstanceState);
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.reservation_popup1);
+        setContentView(R.layout.reservation_popup2);
 
         //UI 객체생성
-        txtText = (TextView)findViewById(R.id.txtText);
+        txtText = (TextView) findViewById(R.id.txtText);
 
         //데이터 가져오기
         Intent intent = getIntent();
@@ -39,32 +39,11 @@ public class ReservationPopup1 extends Activity {
                 + "\nCheck In: " + checkIn + "\nCheck Out: " + checkOut
                 + "\nNumber of people: " + NumOfPeople + "\nMeal: " + Meal;
         txtText.setText(text);
-
-        Button accept_btn = (Button) findViewById(R.id.accept);
-        accept_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
-            public final void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("Decision", "true");
-                intent.putExtra("Index", position);
-                setResult(RESULT_OK, intent);
-
-                //액티비티(팝업) 닫기
-                finish();
-            }
-        }));
-
-        Button reject_btn = (Button) findViewById(R.id.reject);
-        reject_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
-            public final void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("Decision", "false");
-                intent.putExtra("Index", position);
-                setResult(RESULT_OK, intent);
-
-                //액티비티(팝업) 닫기
-                finish();
-            }
-        }));
     }
 
+    //확인 버튼 클릭
+    public void mOnClose(View v){
+        //액티비티(팝업) 닫기
+        finish();
+    }
 }
