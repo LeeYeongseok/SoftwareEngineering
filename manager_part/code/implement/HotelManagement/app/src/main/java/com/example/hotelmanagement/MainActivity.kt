@@ -1,15 +1,22 @@
 package com.example.hotelmanagement
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AutoCompleteTextView
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+    var controller = Controller()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //UI 객체생성
+        val autoCompleteTextView = findViewById<View>(R.id.autoCompleteTextView) as AutoCompleteTextView
+        autoCompleteTextView.setText("Hotel ID : " + controller.getID())
 
         val new_reservation_btn = findViewById<View>(R.id.button1) as Button
         new_reservation_btn.setOnClickListener {

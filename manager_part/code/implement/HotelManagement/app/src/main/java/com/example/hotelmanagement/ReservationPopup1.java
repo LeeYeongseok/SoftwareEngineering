@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-public class ReservationPopup extends Activity {
+public class ReservationPopup1 extends Activity {
 
     TextView txtText;
 
@@ -24,8 +24,18 @@ public class ReservationPopup extends Activity {
 
         //데이터 가져오기
         Intent intent = getIntent();
-        String data = intent.getStringExtra("data");
-        txtText.setText(data);
+
+        String RsvNum = intent.getStringExtra("RsvNum");
+        String RoomNum = intent.getStringExtra("RoomNum");
+        String checkIn = intent.getStringExtra("checkIn");
+        String checkOut = intent.getStringExtra("checkOut");
+        String NumOfPeople = intent.getStringExtra("NumOfPeople");
+        String Meal = intent.getStringExtra("Meal");
+
+        String text = "No." + RsvNum + "\n\nRoom " + RoomNum
+                + "\nCheck In: " + checkIn + "\nCheck Out: " + checkOut
+                + "\nNumber of people: " + NumOfPeople + "\nMeal: " + Meal;
+        txtText.setText(text);
     }
 
     //확인 버튼 클릭
@@ -39,18 +49,4 @@ public class ReservationPopup extends Activity {
         finish();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        //바깥레이어 클릭시 안닫히게
-        if(event.getAction()==MotionEvent.ACTION_OUTSIDE){
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        //안드로이드 백버튼 막기
-        return;
-    }
 }

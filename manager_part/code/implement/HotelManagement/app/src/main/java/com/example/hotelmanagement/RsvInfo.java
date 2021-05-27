@@ -3,7 +3,7 @@ package com.example.hotelmanagement;
 public class RsvInfo {
 
     private int Rsv_Num; //예약번호
-    private int Room_Num; //방번호
+    private int Room_Num; // 방번호
     private String iTime; //체크인 시간
     private String oTime; //체크아웃 시간
     private boolean meal; //식사 여부
@@ -12,8 +12,23 @@ public class RsvInfo {
     private int NumOfPeople; //예약 인원
     private boolean d; //예약 승인 혹은 거절에 대한 여부
 
+    public RsvInfo(int Rsv_Num, int Room_Num, String iTime, String oTime, boolean meal, String checkIn_date, String checkOut_date, int NumOfPeople) {
+        this.Rsv_Num=Rsv_Num;
+        this.Room_Num=Room_Num;
+        this.iTime=iTime;
+        this.oTime=oTime;
+        this.meal=meal;
+        this.checkIn_date=checkIn_date;
+        this.checkOut_date=checkOut_date;
+        this.NumOfPeople=NumOfPeople;
+        this.d=false;
+    }
+
+
     public int getRsv_Num(){return Rsv_Num;}
     public void setRsv_Num(int Rsv_Num){this.Rsv_Num=Rsv_Num;}
+    public int getRoom_Num(){return Room_Num;}
+    public void setRoom_Num(int Room_Num){this.Room_Num=Room_Num;}
     public String getiTime(){return iTime;}
     public void setiTime(String itime){this.iTime=itime;}
     public String getoTime(){return oTime;}
