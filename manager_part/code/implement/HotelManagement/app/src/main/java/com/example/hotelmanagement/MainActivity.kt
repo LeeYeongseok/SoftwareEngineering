@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         val manage_reservation_btn = findViewById<View>(R.id.button3) as Button
         manage_reservation_btn.setOnClickListener {
-            val intent = Intent(this, ManageReservation::class.java)
+            val intent = Intent(this, CheckReservation::class.java)
             startActivity(intent)
         }
     }

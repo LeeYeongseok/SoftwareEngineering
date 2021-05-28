@@ -63,6 +63,13 @@ public class Controller implements Serializable {
 
         return RsvList;
     }
+
+    public ArrayList<RoomInfo> getRoomList() {
+        // 방 정보 보겠다 선택
+        RoomList=db.getRoomList();
+        return RoomList;
+    }
+
     public RsvInfo chooseReservation(int r) {
         // 특정 예약 정보에 대한 선택 [ 1. r이 index면? 2. r이 방 번호면? ]
         // 1. r이 index인 경우

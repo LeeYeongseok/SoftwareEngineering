@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class ManageReservation extends AppCompatActivity {
+public class CheckReservation extends AppCompatActivity {
     ListView listView;
     private ArrayList<RsvInfo> list;
     ReservationAdapter adapter;
@@ -19,10 +19,10 @@ public class ManageReservation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.manage_reservation);
+        setContentView(R.layout.check_reservation);
 
         Intent intent = getIntent();
-        list = controller.checkReservation();
+        list = controller.checkReservation(); // 여기는 승인 받은 예약만 띄워야 하는데 지금 decision 값을 저장하는 부분이 구현이 안돼서 일단 다 받아옴
 
         adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
         listView = (ListView) findViewById(R.id.listview);

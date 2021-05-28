@@ -27,9 +27,11 @@
 
         <activity android:name=".NewReservation"/>
         <activity android:name=".ManageRoom"/>
-        <activity android:name=".ManageReservation"/>
+        <activity android:name=".CheckReservation"/>
         <activity android:name=".ReservationPopup1" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".ReservationPopup2" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".RoomPopup1" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".RoomPopup2" android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

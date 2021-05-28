@@ -15,29 +15,12 @@ public class t_data {
         IDList = new ArrayList<String>();
 
         // 방 정보 입력 (6개)
-        room=new RoomInfo();
-        setRoomList(101, 95, "Single Room", 1);
-        roomList.add(room);
-
-        room=new RoomInfo();
-        setRoomList(102, 100, "Single Room", 2);
-        roomList.add(room);
-
-        room=new RoomInfo();
-        setRoomList(103, 115, "Double Room", 3);
-        roomList.add(room);
-
-        room=new RoomInfo();
-        setRoomList(104, 120, "Triple Room", 4);
-        roomList.add(room);
-
-        room=new RoomInfo();
-        setRoomList(201, 300, "Sweet Room", 5);
-        roomList.add(room);
-
-        room=new RoomInfo();
-        setRoomList(202, 205,"Sweet Room", 5);
-        roomList.add(room);
+        roomList.add(new RoomInfo(101, 95, "Single Room", 1));
+        roomList.add(new RoomInfo(102, 100, "Single Room", 2));
+        roomList.add(new RoomInfo(103, 115, "Double Room", 3));
+        roomList.add(new RoomInfo(104, 120, "Triple Room", 4));
+        roomList.add(new RoomInfo(201, 300, "Sweet Room", 5));
+        roomList.add(new RoomInfo(202, 205,"Sweet Room", 5));
 
         /*for(RoomInfo r : roomList){
             System.out.println("방 번호: "+r.getRoom_Num());
@@ -45,7 +28,6 @@ public class t_data {
             System.out.println("방 옵션: "+r.getRoomType());
             System.out.println("최대 수용 인원: "+r.getCapacity()+"\n");
         }*/
-
 
         // 예약 정보 입력 (5개)
         rsvList.add(new RsvInfo(202101, 201, "10:00", "12:00", true, "5/28", "5/31", 3));
@@ -55,7 +37,11 @@ public class t_data {
         rsvList.add(new RsvInfo(202105, 202,"10:00", "17:00", true, "6/1", "6/3", 3));
 
         // 호텔 id 입력 (5개)
-        IDList.add("30283829"); IDList.add("200"); IDList.add("300"); IDList.add("400"); IDList.add("500");
+        IDList.add("30283829");
+        IDList.add("200");
+        IDList.add("300");
+        IDList.add("400");
+        IDList.add("500");
     }
 
     public ArrayList<RoomInfo> getRoomList(){
@@ -66,13 +52,6 @@ public class t_data {
     }
     public ArrayList<String> getIDList(){
         return IDList;
-    }
-
-    private void setRoomList(int Room_Num, int priceOfDay, String roomType, int capacity){
-        room.setRoom_Num(Room_Num);
-        room.setPrice(priceOfDay);
-        room.setRoomType(roomType);
-        room.setCapacity(capacity);
     }
 
 }
