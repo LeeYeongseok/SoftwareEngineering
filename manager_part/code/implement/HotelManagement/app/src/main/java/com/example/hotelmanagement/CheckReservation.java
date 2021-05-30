@@ -1,30 +1,31 @@
 package com.example.hotelmanagement;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class NewReservation extends AppCompatActivity {
+public class CheckReservation extends AppCompatActivity {
     ListView listView;
     private ArrayList<RsvInfo> list;
     ReservationAdapter adapter;
     Controller controller = new Controller();
 
+    //
+    String hotelID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_reservation);
+        setContentView(R.layout.check_reservation);
 
         Intent intent = getIntent();
-        list = controller.new_checkRsv();
+        list = controller.checkReservation(); // 여기는 승인 받은 예약만 띄워야 하는데 지금 decision 값을 저장하는 부분이 구현이 안돼서 일단 다 받아옴
 
         adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
         listView = (ListView) findViewById(R.id.listview);
@@ -33,50 +34,18 @@ public class NewReservation extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), ReservationPopup1.class);
+                Intent intent = new Intent(getApplicationContext(), ReservationPopup2.class);
                 /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
-                intent.putExtra("Index", position);
                 intent.putExtra("RsvNum", Integer.toString(list.get(position).getRsv_Num()));
                 intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
                 intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
                 intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
                 intent.putExtra("NumOfPeople", Integer.toString(list.get(position).getNumOfPeople()));
                 intent.putExtra("Meal", list.get(position).getMeal() ? "O":"X");
-                startActivityForResult(intent, 1);
+                startActivity(intent);
             }
         });
+
+
     }
-
- //   private class GetData extends AsyncTask <String, Void, String>{
-
-   // }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                //데이터 받기
-                int d = 0;
-                String result = data.getStringExtra("Decision");
-                if (result.equals("true")) { //0이 초기화, 1이 true, 2가 false
-                    // RsvInfo의 d 값 true로 변경
-                    d=1;
-                }
-                else if (result.equals("false")) {
-                    // RsvInfo의 d 값 false로 변경
-                    d=2;
-                }
-
-                int pos = data.getIntExtra("Index", 0);
-                list.remove(pos);
-                // 저장하도록 바꾸기
-
-                controller.acceptOrReject(pos, d);
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
-
 }

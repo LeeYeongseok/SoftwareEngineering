@@ -1,5 +1,14 @@
 package com.example.hotelmanagement;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class DBConnection {
@@ -8,16 +17,21 @@ public class DBConnection {
     private ArrayList<String> IDList = new ArrayList<String>();
     private ArrayList<RsvInfo> RsvList = new ArrayList<RsvInfo>();
     private ArrayList<RoomInfo> RoomList = new ArrayList<RoomInfo>();
+    private ArrayList<RsvInfo> AcceptRsvList = new ArrayList<RsvInfo>();
+    private Context context=null;
     ArrayList<Integer> reject_RsvNum = new ArrayList<Integer>();
     ArrayList<Integer> accept_RsvNum = new ArrayList<Integer>();
 
     private t_data Data;
 
     public DBConnection() {
+        //this.context=context;
         Data = new t_data();
         IDList = Data.getIDList();
         RsvList = Data.getRsvList();
-        RoomList = Data.getRoomList();
+        //RoomList = Data.getRoomList();
+        //String roomJson = getJsonString();
+        //jsonParsing(roomJson);
 
         // 지우기
         System.out.println("방 목록: ");
@@ -46,10 +60,58 @@ public class DBConnection {
         //
 
     }
+    private String getJsonString(){
+        String json = "";
 
-    public ArrayList<String> getIDList(){ return IDList; }
-    public ArrayList<RsvInfo> getRsvList(){ return RsvList; }
-    public ArrayList<RoomInfo> getRoomList(){ return RoomList; }
+        try{
+            AssetManager am = this.context.getResources().getAssets();
+            InputStream is=am.open("test.json");
+            int fileSize = is.available();
+
+            byte[] buffer = new byte[fileSize];
+            is.read(buffer);
+            is.close();
+
+            json=new String(buffer, "UTF-8");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+    private void jsonParsing(String json){
+        try{
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray roomList = jsonObject.getJSONArray("Room");
+            for(int i=0;i<roomList.length();i++){
+                JSONObject roomObject = roomList.getJSONObject(i);
+                RoomInfo room = new RoomInfo();
+                room.setRoom_Num(roomObject.getInt("Room_Num"));
+                room.setPrice(roomObject.getInt("priceOfDay"));
+                room.setRoomType(roomObject.getString("roomType"));
+                room.setCapacity(roomObject.getInt("capacity"));
+                this.RoomList.add(room);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public ArrayList<String> getIDList(){
+        IDList=Data.getIDList();
+        return IDList;
+    }
+    public ArrayList<RsvInfo> getRsvList(){
+        RsvList=Data.getRsvList();
+        return RsvList;
+    }
+    public ArrayList<RsvInfo> getAcceptRsvList(){
+        AcceptRsvList=Data.getAcceptRsvList();
+        return AcceptRsvList;
+    }
+    public ArrayList<RoomInfo> getRoomList(){
+        RoomList=Data.getRoomList();
+        return RoomList;
+    }
 
     public void setRsvList(ArrayList<RsvInfo> rsvList){
         for(RsvInfo rsv : rsvList){
@@ -66,9 +128,9 @@ public class DBConnection {
 
     public void Rsv_Record(ArrayList<RsvInfo> rsvInfo) { //아마 안쓸지도..
         for (RsvInfo one_rsv : rsvInfo) {
-            if (one_rsv.getDecision() == false)
+            if (one_rsv.getDecision() == 2) //0이 초기화, 1이 true, 2가 false
                 reject_RsvNum.add(one_rsv.getRsv_Num()); // 거절된 예약에 대한 리스트 작성
-            else if (one_rsv.getDecision() == true)
+            else if (one_rsv.getDecision() == 1) //0이 초기화, 1이 true, 2가 false
                 accept_RsvNum.add(one_rsv.getRsv_Num()); // 승인된 예약에 대한 리스트 작성
         }
         // 예약에 대한 수락or거절에 대해 DB에 전달 ~~??
@@ -80,9 +142,11 @@ public class DBConnection {
         Data.update_RsvList(this.RsvList);
     }
 
-    public void Rsv_Record_v2(int index, boolean d){
+    public void Rsv_Record_v2(int index, int d){
         this.RsvList.get(index).setDecision(d);
-        Data.update_RoomList(this.RoomList);
+        System.out.println("예약 결정 된 예약 정보: "+this.RsvList.get(index).getRsv_Num());
+
+        Data.update_RsvList(this.RsvList);
     }
     public void Room_add(RoomInfo roomInfo){
         this.RoomList.add(roomInfo);

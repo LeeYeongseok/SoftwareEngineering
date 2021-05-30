@@ -11,18 +11,20 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Controller implements Serializable {
-    DBConnection db = new DBConnection();
+    DBConnection db; //= new DBConnection(this.context);
     RoomMenu menu;
     ArrayList<String>  IDList;
     ArrayList<RsvInfo> RsvList;
     ArrayList<RoomInfo> RoomList;
-
+    Context context=null;
     boolean val;
     String ID;
     //int menu;
     //RoomInfo room;
 
     public Controller() {
+        this.context=context;
+        db=new DBConnection();
         IDList = new ArrayList<String>();
         RsvList = new ArrayList<RsvInfo>();
         RoomList = new ArrayList<RoomInfo>();
@@ -51,10 +53,10 @@ public class Controller implements Serializable {
     public void setMenu(int menuNum, RoomInfo roomInfo) {
         //어떤 메뉴인지 + 수정 혹은 추가에 대한 정보도 제공해야 함.(아마 팝업 한 이후에 확인 눌렀을 때 한번에 보내면 괜찮을 듯)
         // 메뉴 1: add, 2: delete, 3: modify
-        menu = new RoomMenu(menuNum, roomInfo);
+        //menu = new RoomMenu(menuNum, roomInfo);
     }
 
-    public ArrayList<RsvInfo> checkReservation() {
+    public ArrayList<RsvInfo> new_checkRsv() {
         // 예약 정보 보겠다 선택
         RsvList=db.getRsvList();
         System.out.println("\nReservation ID: ");
@@ -63,6 +65,13 @@ public class Controller implements Serializable {
 
         return RsvList;
     }
+
+    public ArrayList<RoomInfo> getRoomList() {
+        // 방 정보 보겠다 선택
+        RoomList=db.getRoomList();
+        return RoomList;
+    }
+
     public RsvInfo chooseReservation(int r) {
         // 특정 예약 정보에 대한 선택 [ 1. r이 index면? 2. r이 방 번호면? ]
         // 1. r이 index인 경우
@@ -83,7 +92,24 @@ public class Controller implements Serializable {
 
         return out_rsv;
     }
-    public void acceptOrReject(int index, boolean d) { //이름 후보 rsvDecision?
+
+    public ArrayList<RsvInfo> checkReservation(){
+        RsvList = db.getRsvList();
+        ArrayList<RsvInfo> t_rsvlist = new ArrayList<RsvInfo>();
+        for(RsvInfo t_rsv : RsvList)
+        {
+            if(t_rsv.getDecision()==1){ //0이 초기화, 1이 true, 2가 false
+                t_rsvlist.add(t_rsv);
+            }
+        }
+
+        System.out.println("예약 승인 된 리스트");
+        for(RsvInfo r : t_rsvlist)
+            System.out.println(r.getRsv_Num());
+        return t_rsvlist;
+    }
+
+    public void acceptOrReject(int index, int d) { //이름 후보 rsvDecision?
         // 예약 수락or거부 정보 전달 (DB 안의 함수 사용)
         // 사용 시 해당 예약 리스트의 인덱스도 입력해야함!!!!!!! (+ 필요하면 방 번호로도 가능)
 

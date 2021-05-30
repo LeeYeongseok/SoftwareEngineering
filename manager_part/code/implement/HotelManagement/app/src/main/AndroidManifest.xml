@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hotelmanagement">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,8 +30,11 @@
 
         <activity android:name=".NewReservation"/>
         <activity android:name=".ManageRoom"/>
-        <activity android:name=".ManageReservation"/>
-        <activity android:name=".ReservationPopup" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".CheckReservation"/>
+        <activity android:name=".ReservationPopup1" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ReservationPopup2" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".RoomPopup1" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".RoomPopup2" android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

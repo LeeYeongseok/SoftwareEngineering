@@ -1,0 +1,8 @@
+{"Room":[
+  {"Room_Num":  "101","priceOfDay": "95", "roomType": "single room", "capacity": "1"},
+  {"Room_Num":  "102","priceOfDay": "100", "roomType": "single room", "capacity": "2"},
+  {"Room_Num":  "103","priceOfDay": "115", "roomType": "double room", "capacity": "3"},
+  {"Room_Num":  "104","priceOfDay": "120", "roomType": "triple room", "capacity": "4"},
+  {"Room_Num": "205","priceOfDay": "205","roomType": "Sweet room","capacity": "5"}
+]
+}

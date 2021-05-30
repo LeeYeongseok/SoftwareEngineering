@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class RoomMenu {
 
-    RoomInfo room;
+/*    RoomInfo room;
     DBConnection db = new DBConnection();
     ArrayList<RoomInfo> roomlist;
 
@@ -49,5 +49,5 @@ public class RoomMenu {
 
         //db로 넘기기
         db.Room_modify(roomlist);
-    }
+    }*/
 }
