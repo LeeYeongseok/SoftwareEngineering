@@ -156,17 +156,17 @@ public class NewReservation extends AppCompatActivity {
                     // RsvInfo의 d 값 true로 변경
                     d=1;
 
-                    InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
-                    ,"a호텔",list.get(pos),d);
+                    //InsertData task = new InsertData();
+                    //task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                    //,"a호텔",list.get(pos),d);
                 }
                 else if (result.equals("false")) {
                     // RsvInfo의 d 값 false로 변경
                     d=2;
 
-                    InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
-                            +"a호텔"+"1"+d);
+                    //InsertData task = new InsertData();
+                    //task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                    //        +"a호텔"+"1"+d);
                 }
 
                 int pos = data.getIntExtra("Index", 0);

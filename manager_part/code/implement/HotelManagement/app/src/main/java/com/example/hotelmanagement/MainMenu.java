@@ -22,6 +22,7 @@ public class MainMenu extends AppCompatActivity {
         new_reservation_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NewReservation.class);
+                intent.putExtra("HotelName", hotelName);
                 startActivity(intent);
             }
         }));
@@ -30,6 +31,8 @@ public class MainMenu extends AppCompatActivity {
         manage_room_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ManageRoom.class);
+                intent.putExtra("HotelName", hotelName);
+                //System.out.println("제대로 들어감? "+intent.getStringExtra("HotelName"));
                 startActivity(intent);
             }
         }));
@@ -38,6 +41,7 @@ public class MainMenu extends AppCompatActivity {
         manage_reservation_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CheckReservation.class);
+                intent.putExtra("HotelName", hotelName);
                 startActivity(intent);
             }
         }));

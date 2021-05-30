@@ -35,17 +35,22 @@ public class ManageRoom extends AppCompatActivity {
     RoomAdapter adapter;
     Controller controller = new Controller();
     String mJsonString;
+    Intent intent;
+    String hotelName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        intent = getIntent();
+        hotelName = intent.getStringExtra("HotelName");
+
         super.onCreate(savedInstanceState);
-        System.out.println("결과?");
+        System.out.println("결과? "+hotelName);
         setContentView(R.layout.manage_room);
 
         GetData task = new GetData();
         task.execute();
 
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
 
     }
     private class GetData extends AsyncTask<String, Void, String> {
@@ -87,7 +92,7 @@ public class ManageRoom extends AppCompatActivity {
 
             String serverURL = "http://qmdlrhdfyd.synology.me:8080/getRoom.php";
             //String postParameters = "hotelname=" + searchKeyword1;
-            String postParameters = "hotelname=" + "a호텔";
+            String postParameters = "hotelname=" + hotelName;
 
 
             try {
@@ -161,10 +166,20 @@ public class ManageRoom extends AppCompatActivity {
                     list.get(pos).setRoomType(data.getStringExtra("RoomType"));
                     list.get(pos).setCapacity(data.getIntExtra("Capacity", 0));
 
+                    System.out.println(hotelName+" "+data.getStringExtra("Room_Num")+" "+data.getStringExtra("Price")+" "+data.getStringExtra("Capacity"));
+
                     InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php","a호텔",);
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php",data.getStringExtra("hotelName"), data.getStringExtra("Room_Num"),
+                                                data.getStringExtra("Price"), data.getStringExtra("RoomType"),
+                                                data.getStringExtra("Capacity"));
 
                 } else if (result.equals("delete")) {
+                    System.out.println(hotelName+" "+list.get(pos).getRoom_Num());
+                    InsertData task = new InsertData();
+                    System.out.println("delete: "+hotelName+" "+Integer.toString(list.get(pos).getRoom_Num()));
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/deleteInfo.php",hotelName,Integer.toString(list.get(pos).getRoom_Num())," "," "," ");
+                            //data.getStringExtra("hotelName"), data.getStringExtra("Room_Num")," "," "," ");
+
                     list.remove(pos);
                 }
 
@@ -177,10 +192,14 @@ public class ManageRoom extends AppCompatActivity {
                 if (result.equals("add")) {
                     int roomNum = data.getIntExtra("RoomNum", 0);
                     int priceOfDay = data.getIntExtra("Price", 0);
-                    String roomType = data.getStringExtra("RoomType");
+                    //String roomType = data.getStringExtra("RoomType");
                     int capacity = data.getIntExtra("Capacity", 0);
 
-                    list.add(new RoomInfo(roomNum, priceOfDay, roomType, capacity));
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/insertInfo.php", data.getStringExtra("hotelName"),
+                            Integer.toString(roomNum), Integer.toString(priceOfDay), Integer.toString(capacity));
+
+                    list.add(new RoomInfo(roomNum, priceOfDay, " ", capacity));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -198,7 +217,7 @@ public class ManageRoom extends AppCompatActivity {
                 int price = item.getInt("costPerDay");
                 String roomType = item.getString("roomType");
                 int capacity = item.getInt("maxGuests");
-                //String picture = item.getString("사진 링크");
+                String picture = " ";
 
                 RoomInfo roomInfo = new RoomInfo(id, price, roomType, capacity);
                 System.out.println("roomID: "+id+" costPerDay: "+price+" roomType: "+roomType+" capacity: "+capacity);
@@ -214,6 +233,8 @@ public class ManageRoom extends AppCompatActivity {
             add_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
                 public final void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), RoomPopup2.class);
+                    intent.putExtra("HotelName", hotelName);
+
                     startActivityForResult(intent, 2);
                     //GetData tast = new GetData();
                     //tast.execute();
@@ -224,14 +245,17 @@ public class ManageRoom extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
                     Intent intent = new Intent(getApplicationContext(), RoomPopup1.class);
+
                     /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
                     intent.putExtra("Index", position);
+                    intent.putExtra("HotelName", hotelName);
                     intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
                     intent.putExtra("Price", Integer.toString(list.get(position).getPrice()));
                     //intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
                     //intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
                     intent.putExtra("RoomType", list.get(position).getRoomType());
                     intent.putExtra("Capacity", Integer.toString(list.get(position).getCapacity()));
+
                     startActivityForResult(intent, 1);
                 }
             });
@@ -277,16 +301,27 @@ public class ManageRoom extends AppCompatActivity {
             String postParameters;
             String hotelName = (String)params[1];
             int roomNum = Integer.valueOf(params[2]);
-            if(params[3]!=null){
-                int costPerDay = Integer.valueOf(params[3]);
-                int maxGuests = Integer.valueOf(params[4]);
-                String picture = " ";
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum
-                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&picture="+picture;
+            if(params[3]==" "){
+                //delete
+
+                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
+                System.out.println("삭제: "+hotelName+" "+roomNum);
             }
             else{
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
+                //modify
+
+                int costPerDay = Integer.valueOf(params[3]);
+                int maxGuests = Integer.valueOf(params[4]);
+                //String picture = " ";
+                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum
+                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&image="+" ";//+"&picture="+picture;
+                System.out.println("수정 입력: "+hotelName+" "+roomNum+" "+costPerDay+" "+maxGuests);
+
             }
+            /*else{
+                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
+                System.out.println("수정 입력: "+hotelName+" "+roomNum);
+            }*/
             String serverURL = (String)params[0];
 
 
