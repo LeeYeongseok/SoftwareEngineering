@@ -26,18 +26,16 @@
         <item>성동/광진</item>
         <item>성북/종로</item>
         <item>영등포/구로/금천</item>
-        <item>용산/중구</item>
+        <item>용산/중</item>
         <item>중랑/동대문</item>
     </string-array>
 
-    "강서", "기장", "사하/사상", "서구/동구/중구/영동", "진구/연제/동래",
-    "북구/금정", "해운대", "남구/수영"));
     <string-array name="dLocation_Busan">
         <item>강서</item>
         <item>기장</item>
-        <item>남구/수영</item>
+        <item>남/수영</item>
         <item>사하/사상</item>
-        <item>서구/동구/중구/영동</item>
+        <item>서/동/중/영동</item>
         <item>진구/연제/동래</item>
         <item>북구/금정</item>
         <item>해운대</item>

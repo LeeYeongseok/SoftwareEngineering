@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+
 public class PaymentCheck extends AppCompatActivity {
 
   RsvCond rsvCond = ((SearchHotel)SearchHotel.context_SearchHotel).getRsvCond();
@@ -55,13 +57,13 @@ public class PaymentCheck extends AppCompatActivity {
      tv_headContent.setText(num);
 
      tv_inDate = findViewById(R.id.tv_inDate);
-     tv_inDate.setText(rsvCond.getCheckin_date());
+     tv_inDate.setText(rsvCond.getCheckin_date().replaceAll("00:00:00", ""));
 
      tv_inTime = findViewById(R.id.tv_inTime);
      tv_inTime.setText(selRoom.getITime());
 
      tv_outDate = findViewById(R.id.tv_outDate);
-     tv_outDate.setText(rsvCond.getCheckout_date());
+     tv_outDate.setText(rsvCond.getCheckout_date().replaceAll("00:00:00", ""));
 
      tv_outTime = findViewById(R.id.tv_outTime);
      tv_outTime.setText(selRoom.getoTime());

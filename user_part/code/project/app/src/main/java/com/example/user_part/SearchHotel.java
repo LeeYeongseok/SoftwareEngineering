@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
@@ -14,6 +15,17 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,10 +33,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
+
 public class SearchHotel extends AppCompatActivity {
 
     public static Context context_SearchHotel;
     private RsvCond rsvCond = new RsvCond();
+    private ArrayList<MeetCond> meetCond = new ArrayList<>();
+    private SimpleDateFormat dateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +47,13 @@ public class SearchHotel extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         context_SearchHotel = this;
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         //체크인-체크아웃 날짜
         Spinner dateCheckinSpinner = (Spinner) findViewById(R.id.dateCheckinSpinner);
         Spinner dateCheckoutSpinner = (Spinner) findViewById(R.id.dateCheckoutSpinner);
 
         Calendar today = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
+        dateFormat = new SimpleDateFormat("yy-MM-dd");
+        SimpleDateFormat saveFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         ArrayList<String> date_checkinlist = new ArrayList<String>(Collections.singleton(dateFormat.format(new Date(today.getTimeInMillis()))));
 
@@ -57,9 +70,10 @@ public class SearchHotel extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                rsvCond.setCheckin_date(date_checkinlist.get(position));
+                //rsvCond.setCheckin_date(date_checkinlist.get(position));
                 try {
                     Date checkin_date = (Date) dateFormat.parse(date_checkinlist.get(position));
+                    rsvCond.setCheckin_date(saveFormat.format(checkin_date)+" 00:00:00");
                     ArrayList<String> date_checkoutlist = new ArrayList<String>();
                     for(int i=1; i<10; i++){
                         Calendar new_date = Calendar.getInstance();
@@ -73,16 +87,15 @@ public class SearchHotel extends AppCompatActivity {
                     dateCheckoutSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            rsvCond.setCheckout_date(date_checkoutlist.get(position));
+                            //rsvCond.setCheckout_date(date_checkoutlist.get(position));
                             try {
                                 Date checkout_date = (Date) dateFormat.parse(date_checkoutlist.get(position));
+                                rsvCond.setCheckout_date(saveFormat.format(checkout_date)+" 00:00:00");
                                 int diff = (int) Math.abs((checkout_date.getTime()-checkin_date.getTime())/(24*60*60*1000));
                                 rsvCond.setStayNight(diff);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
-
                         }
 
                         @Override
@@ -93,8 +106,7 @@ public class SearchHotel extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (NullPointerException e){
-                    System.out.println(rsvCond.getCheckin_date());
-                    System.out.println("왜 때문에 null?");
+                    e.printStackTrace();
                 }
 
 
@@ -169,35 +181,128 @@ public class SearchHotel extends AppCompatActivity {
 
         //검색 버튼
         final Button searchButton = (Button) findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener(){
-
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
-                SearchHotel.this.startActivity(intent);
-                //finish();
-                /*Response.Listener<String> responseListen = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success){
-                                Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
-                                SearchHotel.this.startActivity(intent);
-                                finish();
-                            }
-                        } catch(Exception e){
-
-                        }
-                    }
-                };
-                DBConnection dbConnection = new DBConnection(rsvCond, responseListen);
-                RequestQueue queue = Volley.newRequestQueue(SearchHotel.this);
-                queue.add(dbConnection);*/
+                meetCond.clear();
+                DBConnection dbConnection = new DBConnection();
+                dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getDlocation(),
+                        rsvCond.getNum()+"");
+                /*dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getLocation()+" "+rsvCond.getDlocation(),
+                        rsvCond.getNum()+"");*/
             }
         });
 
+    }
+
+
+
+    private class DBConnection extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result == null) {
+                System.out.println("*****************result is null!********************");
+            } else {
+                SaveResult(result);
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            //서버에서 조건에 맞는 방을 가져옴
+            String iDate = params[0];
+            String oDate = params[1];
+            String loc = params[2];
+            String num = params[3];
+
+            System.out.println(iDate + oDate + loc + num);
+            String server_url = "http://qmdlrhdfyd.synology.me:8080/searchRoom.php";
+            /*String postParameters = "date1=" + "2021-05-28 00:00:00" + "&date2=" + "2021-05-29 00:00:00" +
+                    "&location=" + "동작구" + "&maxGuest=" + "1";*/
+            String postParameters = "date1=" + iDate + "&date2=" + oDate +
+                    "&location=" + loc + "&maxGuest=" + num;
+
+            try {
+                URL url = new URL(server_url);
+                HttpURLConnection URLConnection = (HttpURLConnection) url.openConnection();
+
+                URLConnection.setReadTimeout(5000);
+                URLConnection.setConnectTimeout(5000);
+                URLConnection.setRequestMethod("POST");
+                URLConnection.setDoInput(true);
+                URLConnection.connect();
+
+                OutputStream outputStream = URLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = URLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = URLConnection.getInputStream();
+                } else {
+                    inputStream = URLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+
+                bufferedReader.close();
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+    }
+
+    private void SaveResult(String response) {
+
+        try {
+            response = response.replaceAll("</pre></pre>", "");
+
+            JSONObject JsonObject = new JSONObject(response);
+            JSONArray JsonArray = JsonObject.getJSONArray("webnautes");
+
+            for (int i = 0; i < JsonArray.length(); i++) {
+                JSONObject r = JsonArray.getJSONObject(i);
+
+                String hotelID = r.getString("hotelID");
+                int costPerDay = r.getInt("costPerDay");
+                String roomID = r.getString("roomID");
+                MeetCond mc = new MeetCond(hotelID, costPerDay, (float) -1.0, R.drawable.room2, "", "",
+                        "", "", roomID, true, -1, -1);
+                meetCond.add(mc);
+            }
+
+            if (!meetCond.isEmpty()){
+                Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
+                SearchHotel.this.startActivity(intent);}
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public ArrayList<MeetCond> getMeetCond() {
+        return meetCond;
     }
 
     public RsvCond getRsvCond() {
