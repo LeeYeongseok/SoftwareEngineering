@@ -1,56 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hotel ID"
-        android:focusable="false"
-        android:clickable="false"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.198" />
+        app:layout_constraintVertical_bias="0.4">
+
+        <TextView
+            android:text="Hotel Name : "
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:layout_width="110dp"
+            android:layout_height="53dp" />
+        <EditText
+            android:id="@+id/hotelName"
+            android:layout_width="150dp"
+            android:layout_height="53dp" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="265dp"
-        android:layout_height="86dp"
-        android:text="New Reservation"
+        android:id="@+id/login_btn"
+        android:layout_width="105dp"
+        android:layout_height="56dp"
+        android:text="Log in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.373" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="265dp"
-        android:layout_height="86dp"
-        android:text="Manage Room"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.573" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="265dp"
-        android:layout_height="86dp"
-        android:text="Check Reservation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.773" />
+        app:layout_constraintVertical_bias="0.523" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

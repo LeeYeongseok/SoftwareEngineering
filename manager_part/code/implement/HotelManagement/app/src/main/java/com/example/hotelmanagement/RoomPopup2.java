@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class RoomPopup2 extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +31,22 @@ public class RoomPopup2 extends Activity {
         Button add_btn = (Button) findViewById(R.id.add);
         add_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("Decision", "add");
-                intent.putExtra("RoomNum", Integer.parseInt(String.valueOf(roomNumText.getText())));
-                intent.putExtra("Price", Integer.parseInt(String.valueOf(priceText.getText())));
-                intent.putExtra("RoomType", String.valueOf(roomTypeText.getText()));
-                intent.putExtra("Capacity", Integer.parseInt(String.valueOf(capacityText.getText())));
-                setResult(RESULT_OK, intent);
+                if (String.valueOf(roomNumText.getText()).length() != 0 && String.valueOf(priceText.getText()).length() != 0
+                        && String.valueOf(roomTypeText.getText()).length() != 0 && String.valueOf(capacityText.getText()).length() != 0) {
+                    Intent intent = new Intent();
+                    intent.putExtra("Decision", "add");
+                    intent.putExtra("RoomNum", Integer.parseInt(String.valueOf(roomNumText.getText())));
+                    intent.putExtra("Price", Integer.parseInt(String.valueOf(priceText.getText())));
+                    intent.putExtra("RoomType", String.valueOf(roomTypeText.getText()));
+                    intent.putExtra("Capacity", Integer.parseInt(String.valueOf(capacityText.getText())));
+                    setResult(RESULT_OK, intent);
 
-                //액티비티(팝업) 닫기
-                finish();
+                    //액티비티(팝업) 닫기
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Please enter everything", Toast.LENGTH_SHORT).show();
+                }
             }
         }));
     }

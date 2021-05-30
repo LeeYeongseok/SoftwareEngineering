@@ -16,7 +16,6 @@ public class CheckReservation extends AppCompatActivity {
     ReservationAdapter adapter;
     Controller controller = new Controller();
 
-    //
     String hotelID;
 
     @Override
