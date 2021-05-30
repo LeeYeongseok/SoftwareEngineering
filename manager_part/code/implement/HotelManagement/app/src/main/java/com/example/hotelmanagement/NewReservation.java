@@ -1,22 +1,36 @@
 package com.example.hotelmanagement;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class NewReservation extends AppCompatActivity {
     ListView listView;
-    private ArrayList<RsvInfo> list;
+    private ArrayList<RsvInfo> list = new ArrayList<RsvInfo>();
     ReservationAdapter adapter;
-    Controller controller = new Controller();
+    //Controller controller = new Controller();
+    String mJsonString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,33 +38,111 @@ public class NewReservation extends AppCompatActivity {
         setContentView(R.layout.new_reservation);
 
         Intent intent = getIntent();
-        list = controller.new_checkRsv();
+        //list = controller.new_checkRsv();
 
-        adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
-        listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(adapter);
+        GetData task = new GetData();
+        task.execute();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), ReservationPopup1.class);
-                /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
-                intent.putExtra("Index", position);
-                intent.putExtra("RsvNum", Integer.toString(list.get(position).getRsv_Num()));
-                intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
-                intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
-                intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
-                intent.putExtra("NumOfPeople", Integer.toString(list.get(position).getNumOfPeople()));
-                intent.putExtra("Meal", list.get(position).getMeal() ? "O":"X");
-                startActivityForResult(intent, 1);
-            }
-        });
+
     }
+    private class GetData extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+        String errorString = null;
+        private static final String TAG = "MyTag";
 
- //   private class GetData extends AsyncTask <String, Void, String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-   // }
+            progressDialog = ProgressDialog.show(NewReservation.this,
+                    "Please Wait", null, true, true);
+        }
 
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            //mTextViewResult.setText(result);
+            Log.d(TAG, "response - " + result);
+
+            if (result == null){
+
+                System.out.println(errorString);
+            }
+            else {
+
+                mJsonString = result;
+                showResult();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            //String searchKeyword1 = params[0]; //호텔 이름 받을 수 있으면 사용
+
+            String serverURL = "http://qmdlrhdfyd.synology.me:8080/getReservation.php";
+            //String postParameters = "hotelname=" + searchKeyword1;
+            String postParameters = "hotelname=" + "a호텔";
+
+
+            try {
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                } else {
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+                errorString = e.toString();
+
+                return null;
+            }
+
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -63,20 +155,177 @@ public class NewReservation extends AppCompatActivity {
                 if (result.equals("true")) { //0이 초기화, 1이 true, 2가 false
                     // RsvInfo의 d 값 true로 변경
                     d=1;
+
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                    ,"a호텔",list.get(pos),d);
                 }
                 else if (result.equals("false")) {
                     // RsvInfo의 d 값 false로 변경
                     d=2;
+
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                            +"a호텔"+"1"+d);
                 }
 
                 int pos = data.getIntExtra("Index", 0);
                 list.remove(pos);
                 // 저장하도록 바꾸기
 
-                controller.acceptOrReject(pos, d);
+                //controller.acceptOrReject(pos, d);
                 adapter.notifyDataSetChanged();
             }
         }
     }
+    private void showResult(){
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
 
+            for(int i=0;i<jsonArray.length();i++){
+
+                JSONObject item = jsonArray.getJSONObject(i);
+                int reserNum = item.getInt("reserNum");
+                int roomID = item.getInt("roomID");
+                String checkin = item.getString("checkin");
+                String checkout = item.getString("checkout");
+                //boolean meal = item.getInt("meal");
+                boolean meal;
+                if(item.getInt("meal")==1) meal = true;
+                else meal = false;
+                int NumofPeople = item.getInt("NumofPeople");
+                //String picture = item.getString("사진 링크");
+
+                RsvInfo rsvInfo = new RsvInfo(reserNum, roomID, checkin, checkout, meal, "", "", NumofPeople);
+                System.out.println(reserNum+" "+roomID+" "+checkin+" "+checkout+" "+meal+" "+NumofPeople);
+                list.add(rsvInfo);
+
+            }
+
+            for(RsvInfo r : list){
+                System.out.println(r.getRoom_Num()+" "+r.getRsv_Num()+" "+r.getNumOfPeople());
+            }
+            //mListViewList.setAdapter(adapter);
+
+
+            adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
+            listView = (ListView) findViewById(R.id.listview);
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                    Intent intent = new Intent(getApplicationContext(), ReservationPopup1.class);
+                    /* putExtra의 첫 값은 식별 태그, 뒤에는 다음 화면에 넘길 값 */
+                    intent.putExtra("Index", position);
+                    intent.putExtra("RsvNum", Integer.toString(list.get(position).getRsv_Num()));
+                    intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
+                    intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
+                    intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
+                    intent.putExtra("NumOfPeople", Integer.toString(list.get(position).getNumOfPeople()));
+                    intent.putExtra("Meal", list.get(position).getMeal() ? "O":"X");
+                    startActivityForResult(intent, 1);
+                }
+            });
+
+        } catch (JSONException e) {
+
+            Log.d("TAG", "showResult : ", e);
+        }
+    }
+
+
+    class InsertData extends AsyncTask<String, Void, String>{
+        private static final String TAG = "myTag";
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(NewReservation.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            //mTextViewResult.setText(result);
+            Log.d(TAG, "POST response  - " + result);
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String hotelName = (String)params[1];
+            int rsvNum = Integer.valueOf(params[2]);
+            String decision = (String)params[3];
+
+            //String country = (String)params[2];
+
+            String serverURL = (String)params[0];
+            String postParameters = "hotelID"+hotelName+"reserNum"+rsvNum+"&confirm=" + decision;// + "&country=" + country;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    }
 }

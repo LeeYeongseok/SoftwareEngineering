@@ -3,6 +3,7 @@ package com.example.hotelmanagement;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -159,6 +160,10 @@ public class ManageRoom extends AppCompatActivity {
                     list.get(pos).setPrice(data.getIntExtra("Price", 0));
                     list.get(pos).setRoomType(data.getStringExtra("RoomType"));
                     list.get(pos).setCapacity(data.getIntExtra("Capacity", 0));
+
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php","a호텔",);
+
                 } else if (result.equals("delete")) {
                     list.remove(pos);
                 }
@@ -241,6 +246,105 @@ public class ManageRoom extends AppCompatActivity {
             Log.d("TAG", "showResult : ", e);
         }
 
+    }
+
+    class InsertData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+        private static final String TAG = "MyTag";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(ManageRoom.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            //mTextViewResult.setText(result);
+            Log.d(TAG, "POST response  - " + result);
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String postParameters;
+            String hotelName = (String)params[1];
+            int roomNum = Integer.valueOf(params[2]);
+            if(params[3]!=null){
+                int costPerDay = Integer.valueOf(params[3]);
+                int maxGuests = Integer.valueOf(params[4]);
+                String picture = " ";
+                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum
+                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&picture="+picture;
+            }
+            else{
+                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
+            }
+            String serverURL = (String)params[0];
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
     }
 
 }
