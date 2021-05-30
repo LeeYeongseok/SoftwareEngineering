@@ -26,6 +26,19 @@ if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND 
         echo 'MySQL Error: ';
         exit;
     }
+
+    $hotelId = $result[0]['hotelID'];
+
+    $query = "SELECT * FROM hotelInfo WHERE name = $hoteId;";
+
+    $stmt = $con->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if(!$result){
+        echo 'MySQL Error: ';
+        exit;
+    }
     $hotelId = $result[0]['hotelID'];
 
     $query = "INSERT INTO roomInfo (hotelID, roomID, costPerday, maxGuests, photo_path) VALUES ($hotelId, $roomID, $price, $maxGuest, '$picture')";
