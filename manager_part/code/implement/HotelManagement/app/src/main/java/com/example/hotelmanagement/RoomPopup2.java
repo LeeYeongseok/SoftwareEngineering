@@ -22,7 +22,7 @@ public class RoomPopup2 extends Activity {
         //UI 객체생성
         EditText roomNumText = (EditText)findViewById(R.id.roomNumText);
         EditText priceText = (EditText)findViewById(R.id.priceText);
-        //EditText roomTypeText = (EditText)findViewById(R.id.roomTypeText);
+        EditText roomTypeText = (EditText)findViewById(R.id.roomTypeText);
         EditText capacityText = (EditText)findViewById(R.id.capacityText);
 
         //데이터 가져오기
@@ -32,12 +32,12 @@ public class RoomPopup2 extends Activity {
         add_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
                 if (String.valueOf(roomNumText.getText()).length() != 0 && String.valueOf(priceText.getText()).length() != 0
-                         && String.valueOf(capacityText.getText()).length() != 0) { //&& String.valueOf(roomTypeText.getText()).length() != 0
+                        && String.valueOf(roomTypeText.getText()).length() != 0 && String.valueOf(capacityText.getText()).length() != 0) { //&& String.valueOf(roomTypeText.getText()).length() != 0
                     Intent intent = new Intent();
                     intent.putExtra("Decision", "add");
                     intent.putExtra("RoomNum", Integer.parseInt(String.valueOf(roomNumText.getText())));
                     intent.putExtra("Price", Integer.parseInt(String.valueOf(priceText.getText())));
-                    //intent.putExtra("RoomType", String.valueOf(roomTypeText.getText()));
+                    intent.putExtra("RoomType", String.valueOf(roomTypeText.getText()));
                     intent.putExtra("Capacity", Integer.parseInt(String.valueOf(capacityText.getText())));
                     setResult(RESULT_OK, intent);
 

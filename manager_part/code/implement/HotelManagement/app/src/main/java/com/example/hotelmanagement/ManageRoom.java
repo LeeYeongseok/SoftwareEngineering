@@ -50,9 +50,8 @@ public class ManageRoom extends AppCompatActivity {
         GetData task = new GetData();
         task.execute();
 
-        //Intent intent = getIntent();
-
     }
+
     private class GetData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
         String errorString = null;
@@ -71,12 +70,15 @@ public class ManageRoom extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            //mTextViewResult.setText(result);
             Log.d(TAG, "response - " + result);
 
             if (result == null){
 
                 System.out.println(errorString);
+            }
+            else if (result.contains("Undefined variable")) {
+                list.clear();
+                adapter.notifyDataSetChanged();
             }
             else {
 
@@ -162,28 +164,26 @@ public class ManageRoom extends AppCompatActivity {
                 int pos = data.getIntExtra("Index", 0);
 
                 if (result.equals("modify")) {
-                    list.get(pos).setPrice(data.getIntExtra("Price", 0));
-                    list.get(pos).setRoomType(data.getStringExtra("RoomType"));
-                    list.get(pos).setCapacity(data.getIntExtra("Capacity", 0));
-
-                    System.out.println(hotelName+" "+data.getStringExtra("Room_Num")+" "+data.getStringExtra("Price")+" "+data.getStringExtra("Capacity"));
+                    //list.get(pos).setPrice(data.getIntExtra("Price", 0));
+                    //list.get(pos).setRoomType(data.getStringExtra("RoomType"));
+                    //list.get(pos).setCapacity(data.getIntExtra("Capacity", 0));
 
                     InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php",data.getStringExtra("hotelName"), data.getStringExtra("Room_Num"),
-                                                data.getStringExtra("Price"), data.getStringExtra("RoomType"),
-                                                data.getStringExtra("Capacity"));
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php", hotelName, Integer.toString(list.get(pos).getRoom_Num()),
+                                                Integer.toString(data.getIntExtra("Price", 0)), data.getStringExtra("RoomType"),
+                                                Integer.toString(data.getIntExtra("Capacity", 0)));
+
+                    GetData task2 = new GetData();
+                    task2.execute();
 
                 } else if (result.equals("delete")) {
-                    System.out.println(hotelName+" "+list.get(pos).getRoom_Num());
                     InsertData task = new InsertData();
-                    System.out.println("delete: "+hotelName+" "+Integer.toString(list.get(pos).getRoom_Num()));
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/deleteInfo.php",hotelName,Integer.toString(list.get(pos).getRoom_Num())," "," "," ");
-                            //data.getStringExtra("hotelName"), data.getStringExtra("Room_Num")," "," "," ");
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/deleteInfo.php", hotelName, Integer.toString(list.get(pos).getRoom_Num()), " ", " ", " ");
 
-                    list.remove(pos);
+                    GetData task2 = new GetData();
+                    task2.execute();
                 }
 
-                adapter.notifyDataSetChanged();
             }
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
@@ -192,37 +192,39 @@ public class ManageRoom extends AppCompatActivity {
                 if (result.equals("add")) {
                     int roomNum = data.getIntExtra("RoomNum", 0);
                     int priceOfDay = data.getIntExtra("Price", 0);
-                    //String roomType = data.getStringExtra("RoomType");
+                    String roomType = data.getStringExtra("RoomType");
                     int capacity = data.getIntExtra("Capacity", 0);
 
                     InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/insertInfo.php", data.getStringExtra("hotelName"),
-                            Integer.toString(roomNum), Integer.toString(priceOfDay), Integer.toString(capacity));
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/insertInfo.php", hotelName,
+                            Integer.toString(roomNum), Integer.toString(priceOfDay), roomType, Integer.toString(capacity));
 
-                    list.add(new RoomInfo(roomNum, priceOfDay, " ", capacity));
-                    adapter.notifyDataSetChanged();
+                    GetData task2 = new GetData();
+                    task2.execute();
                 }
             }
         }
     }
+
     private void showResult(){
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
 
-            for(int i=0;i<jsonArray.length();i++){
+            list.clear();
+            if (!mJsonString.contains("Undefined variable")) {
+                for (int i = 0; i < jsonArray.length(); i++) {
 
-                JSONObject item = jsonArray.getJSONObject(i);
-                int id = item.getInt("roomID");
-                int price = item.getInt("costPerDay");
-                String roomType = item.getString("roomType");
-                int capacity = item.getInt("maxGuests");
-                String picture = " ";
+                    JSONObject item = jsonArray.getJSONObject(i);
+                    int id = item.getInt("roomID");
+                    int price = item.getInt("costPerDay");
+                    String roomType = item.getString("roomType");
+                    int capacity = item.getInt("maxGuests");
+                    String picture = " ";
 
-                RoomInfo roomInfo = new RoomInfo(id, price, roomType, capacity);
-                System.out.println("roomID: "+id+" costPerDay: "+price+" roomType: "+roomType+" capacity: "+capacity);
-                list.add(roomInfo);
-
+                    RoomInfo roomInfo = new RoomInfo(id, price, roomType, capacity);
+                    list.add(roomInfo);
+                }
             }
 
             adapter = new RoomAdapter(this, R.layout.room_list, list);
@@ -234,10 +236,7 @@ public class ManageRoom extends AppCompatActivity {
                 public final void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), RoomPopup2.class);
                     intent.putExtra("HotelName", hotelName);
-
                     startActivityForResult(intent, 2);
-                    //GetData tast = new GetData();
-                    //tast.execute();
                 }
             }));
 
@@ -251,8 +250,6 @@ public class ManageRoom extends AppCompatActivity {
                     intent.putExtra("HotelName", hotelName);
                     intent.putExtra("RoomNum", Integer.toString(list.get(position).getRoom_Num()));
                     intent.putExtra("Price", Integer.toString(list.get(position).getPrice()));
-                    //intent.putExtra("checkIn", list.get(position).getCheckIn_date() + " " + list.get(position).getiTime());
-                    //intent.putExtra("checkOut", list.get(position).getCheckOut_date() + " " + list.get(position).getoTime());
                     intent.putExtra("RoomType", list.get(position).getRoomType());
                     intent.putExtra("Capacity", Integer.toString(list.get(position).getCapacity()));
 
@@ -263,7 +260,6 @@ public class ManageRoom extends AppCompatActivity {
             for(RoomInfo r : list){
                 System.out.println(r.getRoom_Num()+" "+r.getPrice()+" "+r.getCapacity());
             }
-            //mListViewList.setAdapter(adapter);
 
         } catch (JSONException e) {
 
@@ -290,7 +286,6 @@ public class ManageRoom extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            //mTextViewResult.setText(result);
             Log.d(TAG, "POST response  - " + result);
         }
 
@@ -298,32 +293,26 @@ public class ManageRoom extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+            String serverURL = (String)params[0];
             String postParameters;
             String hotelName = (String)params[1];
             int roomNum = Integer.valueOf(params[2]);
-            if(params[3]==" "){
+
+            if(params[3].equals(" ")){
                 //delete
 
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
-                System.out.println("삭제: "+hotelName+" "+roomNum);
+                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum;
             }
             else{
                 //modify
 
                 int costPerDay = Integer.valueOf(params[3]);
-                int maxGuests = Integer.valueOf(params[4]);
+                int maxGuests = Integer.valueOf(params[5]);
                 //String picture = " ";
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum
-                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&image="+" ";//+"&picture="+picture;
-                System.out.println("수정 입력: "+hotelName+" "+roomNum+" "+costPerDay+" "+maxGuests);
 
+                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum
+                        + "&price=" + costPerDay + "&maxGuest=" + maxGuests + "&picture=" + " ";//+"&picture="+picture;
             }
-            /*else{
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
-                System.out.println("수정 입력: "+hotelName+" "+roomNum);
-            }*/
-            String serverURL = (String)params[0];
-
 
             try {
 
