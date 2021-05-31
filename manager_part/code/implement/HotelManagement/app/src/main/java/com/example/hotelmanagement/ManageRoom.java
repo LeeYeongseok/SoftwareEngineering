@@ -33,7 +33,6 @@ public class ManageRoom extends AppCompatActivity {
     ListView listView;
     private ArrayList<RoomInfo> list = new ArrayList<RoomInfo>();
     RoomAdapter adapter;
-    Controller controller = new Controller();
     String mJsonString;
     Intent intent;
     String hotelName;
@@ -90,10 +89,7 @@ public class ManageRoom extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            //String searchKeyword1 = params[0]; //호텔 이름 받을 수 있으면 사용
-
             String serverURL = "http://qmdlrhdfyd.synology.me:8080/getRoom.php";
-            //String postParameters = "hotelname=" + searchKeyword1;
             String postParameters = "hotelname=" + hotelName;
 
 
@@ -101,13 +97,11 @@ public class ManageRoom extends AppCompatActivity {
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
-
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
-
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
@@ -125,7 +119,6 @@ public class ManageRoom extends AppCompatActivity {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -136,12 +129,8 @@ public class ManageRoom extends AppCompatActivity {
                     sb.append(line);
                 }
 
-
                 bufferedReader.close();
-
-
                 return sb.toString().trim();
-
 
             } catch (Exception e) {
 
@@ -164,9 +153,6 @@ public class ManageRoom extends AppCompatActivity {
                 int pos = data.getIntExtra("Index", 0);
 
                 if (result.equals("modify")) {
-                    //list.get(pos).setPrice(data.getIntExtra("Price", 0));
-                    //list.get(pos).setRoomType(data.getStringExtra("RoomType"));
-                    //list.get(pos).setCapacity(data.getIntExtra("Capacity", 0));
 
                     InsertData task = new InsertData();
                     task.execute("http://qmdlrhdfyd.synology.me:8080/updateInfo.php", hotelName, Integer.toString(list.get(pos).getRoom_Num()),
@@ -309,16 +295,12 @@ public class ManageRoom extends AppCompatActivity {
                 //modify
 
                 int costPerDay = Integer.valueOf(params[3]);
+                String roomType = (String)params[4];
                 int maxGuests = Integer.valueOf(params[5]);
                 //String picture = " ";
 
-                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum
-                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&imageLink="+" ";//+"&picture="+picture;
-                System.out.println("수정 입력: "+hotelName+" "+roomNum+" "+costPerDay+" "+maxGuests);
-
-
-                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum
-                        + "&price=" + costPerDay + "&maxGuest=" + maxGuests + "&picture=" + " ";//+"&picture="+picture;
+                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum +"&price=" + costPerDay
+                        + "&maxGuest=" + maxGuests + "&picture=" + " " + "&roomtype=" + roomType;
             }
 
             try {
@@ -326,12 +308,10 @@ public class ManageRoom extends AppCompatActivity {
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
-
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.connect();
-
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
@@ -350,7 +330,6 @@ public class ManageRoom extends AppCompatActivity {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -361,12 +340,8 @@ public class ManageRoom extends AppCompatActivity {
                     sb.append(line);
                 }
 
-
                 bufferedReader.close();
-
-
                 return sb.toString();
-
 
             } catch (Exception e) {
 
@@ -374,10 +349,8 @@ public class ManageRoom extends AppCompatActivity {
 
                 return new String("Error: " + e.getMessage());
             }
-
         }
     }
-
 }
 
 

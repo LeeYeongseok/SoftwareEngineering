@@ -32,7 +32,7 @@ public class RoomPopup2 extends Activity {
         add_btn.setOnClickListener((View.OnClickListener)(new View.OnClickListener() {
             public final void onClick(View v) {
                 if (String.valueOf(roomNumText.getText()).length() != 0 && String.valueOf(priceText.getText()).length() != 0
-                        && String.valueOf(roomTypeText.getText()).length() != 0 && String.valueOf(capacityText.getText()).length() != 0) { //&& String.valueOf(roomTypeText.getText()).length() != 0
+                        && String.valueOf(roomTypeText.getText()).length() != 0 && String.valueOf(capacityText.getText()).length() != 0) {
                     Intent intent = new Intent();
                     intent.putExtra("Decision", "add");
                     intent.putExtra("RoomNum", Integer.parseInt(String.valueOf(roomNumText.getText())));
