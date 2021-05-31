@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 
+
 public class SearchHotel extends AppCompatActivity {
 
     public static Context context_SearchHotel;

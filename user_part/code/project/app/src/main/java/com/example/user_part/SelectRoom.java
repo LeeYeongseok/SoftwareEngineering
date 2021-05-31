@@ -88,6 +88,7 @@ public class SelectRoom extends AppCompatActivity {
 
 
         tv_PriceContent= findViewById(R.id.tv_PriceContent);
+
         String Price = String.valueOf(selroom.getPriceOfDay());
         intTotalPrice = selroom.getPriceOfDay();
         tv_PriceContent.setText(Price + "원");
@@ -102,7 +103,7 @@ public class SelectRoom extends AppCompatActivity {
         tv_reviewContent= findViewById(R.id.tv_reviewContent);
         try{
             tv_reviewContent.setText(selroom.getReview().get(0));
-            tv_reviewContent.setTextSize(6 * tv_reviewContent.getResources().getDisplayMetrics().density);
+            //tv_reviewContent.setTextSize(6 * tv_reviewContent.getResources().getDisplayMetrics().density);
         } catch(Exception e){
             e.printStackTrace();
         }
