@@ -31,13 +31,17 @@ public class NewReservation extends AppCompatActivity {
     ReservationAdapter adapter;
     //Controller controller = new Controller();
     String mJsonString;
+    Intent intent;
+    String hotelName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_reservation);
+        intent = getIntent();
+        hotelName = intent.getStringExtra("HotelName");
 
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
         //list = controller.new_checkRsv();
 
         GetData task = new GetData();
@@ -84,7 +88,7 @@ public class NewReservation extends AppCompatActivity {
 
             String serverURL = "http://qmdlrhdfyd.synology.me:8080/getReservation.php";
             //String postParameters = "hotelname=" + searchKeyword1;
-            String postParameters = "hotelname=" + "a호텔";
+            String postParameters = "hotelname=" + hotelName;
 
 
             try {
@@ -149,27 +153,29 @@ public class NewReservation extends AppCompatActivity {
 
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                int pos = data.getIntExtra("Index", 0);
+
                 //데이터 받기
-                int d = 0;
+                //int d = 0;
                 String result = data.getStringExtra("Decision");
                 if (result.equals("true")) { //0이 초기화, 1이 true, 2가 false
                     // RsvInfo의 d 값 true로 변경
-                    d=1;
+                    //d=1;
 
-                    //InsertData task = new InsertData();
-                    //task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
-                    //,"a호텔",list.get(pos),d);
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                            ,hotelName,Integer.toString(list.get(pos).getRsv_Num()),"1");
                 }
                 else if (result.equals("false")) {
                     // RsvInfo의 d 값 false로 변경
-                    d=2;
+                    //d=2;
 
-                    //InsertData task = new InsertData();
-                    //task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
-                    //        +"a호텔"+"1"+d);
+                    InsertData task = new InsertData();
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
+                            ,hotelName,Integer.toString(list.get(pos).getRsv_Num()),"2");
                 }
 
-                int pos = data.getIntExtra("Index", 0);
+                //int pos = data.getIntExtra("Index", 0);
                 list.remove(pos);
                 // 저장하도록 바꾸기
 
@@ -263,13 +269,14 @@ public class NewReservation extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String hotelName = (String)params[1];
-            int rsvNum = Integer.valueOf(params[2]);
-            String decision = (String)params[3];
+            int rsvNum = Integer.valueOf(params[2]); //(String)params[2];
+            int decision = Integer.valueOf(params[3]); //(String)params[3];
 
+            System.out.println("수락? 거절? "+hotelName+" 예약번호 No."+rsvNum+" 예약 결과:"+decision);
             //String country = (String)params[2];
 
             String serverURL = (String)params[0];
-            String postParameters = "hotelID"+hotelName+"reserNum"+rsvNum+"&confirm=" + decision;// + "&country=" + country;
+            String postParameters = "hotelname="+hotelName+"&reservationNum="+rsvNum+"&status=" + decision;// + "&country=" + country;
 
 
             try {

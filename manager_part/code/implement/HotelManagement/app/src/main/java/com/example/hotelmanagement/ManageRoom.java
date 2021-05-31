@@ -196,7 +196,7 @@ public class ManageRoom extends AppCompatActivity {
                     int capacity = data.getIntExtra("Capacity", 0);
 
                     InsertData task = new InsertData();
-                    task.execute("http://qmdlrhdfyd.synology.me:8080/insertInfo.php", data.getStringExtra("hotelName"),
+                    task.execute("http://qmdlrhdfyd.synology.me:8080/insertInfo.php", hotelName,
                             Integer.toString(roomNum), Integer.toString(priceOfDay), Integer.toString(capacity));
 
                     list.add(new RoomInfo(roomNum, priceOfDay, " ", capacity));
@@ -304,7 +304,7 @@ public class ManageRoom extends AppCompatActivity {
             if(params[3]==" "){
                 //delete
 
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum;
+                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum;
                 System.out.println("삭제: "+hotelName+" "+roomNum);
             }
             else{
@@ -313,8 +313,8 @@ public class ManageRoom extends AppCompatActivity {
                 int costPerDay = Integer.valueOf(params[3]);
                 int maxGuests = Integer.valueOf(params[4]);
                 //String picture = " ";
-                postParameters = "hotelID=" + hotelName + "&roomID" + roomNum
-                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&image="+" ";//+"&picture="+picture;
+                postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum
+                        +"&costPerDay="+costPerDay+"&maxGuests="+maxGuests+"&imageLink="+" ";//+"&picture="+picture;
                 System.out.println("수정 입력: "+hotelName+" "+roomNum+" "+costPerDay+" "+maxGuests);
 
             }

@@ -25,19 +25,25 @@ import java.util.ArrayList;
 
 public class CheckReservation extends AppCompatActivity {
     ListView listView;
-    private ArrayList<RsvInfo> list;
+    private ArrayList<RsvInfo> list = new ArrayList<RsvInfo>();
     ReservationAdapter adapter;
     Controller controller = new Controller();
     String mJsonString;
+    Intent intent;
+    String hotelName;
 
     String hotelID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        intent = getIntent();
+        hotelName = intent.getStringExtra("HotelName");
+
         setContentView(R.layout.check_reservation);
 
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
         //list = controller.checkReservation(); // 여기는 승인 받은 예약만 띄워야 하는데 지금 decision 값을 저장하는 부분이 구현이 안돼서 일단 다 받아옴
 
         GetData task = new GetData();
@@ -104,7 +110,7 @@ public class CheckReservation extends AppCompatActivity {
 
             String serverURL = "http://qmdlrhdfyd.synology.me:8080/getFinishedReservation.php";
             //String postParameters = "hotelname=" + searchKeyword1;
-            String postParameters = "hotelname=" + "a호텔";
+            String postParameters = "hotelname=" + hotelName;
 
 
             try {
