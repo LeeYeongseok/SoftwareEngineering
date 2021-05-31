@@ -3,8 +3,6 @@ package com.example.hotelmanagement;
 public class RoomInfo {
     private int Room_Num;
     private int priceOfDay; //1박 가격
-    //private String iTime; //체크인 시간??
-    //private String oTime; //체크아웃 시간??
     private String roomType; //방 타입
     private int capacity; //방 수용인원(최대)
 
@@ -26,10 +24,6 @@ public class RoomInfo {
     public void setPrice(int priceOfDay) {
         this.priceOfDay=priceOfDay;
     }
-    //public String getiTime() { return iTime; }
-    //public void setiTime(String iTime) { this.iTime=iTime; }
-    //public String getoTime() { oTime; }
-    //public void setoTime(String oTime) { this.oTime=oTime; }
     public String getRoomType() {
         return roomType;
     }

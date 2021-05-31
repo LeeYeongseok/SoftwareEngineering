@@ -29,7 +29,6 @@ public class NewReservation extends AppCompatActivity {
     ListView listView;
     private ArrayList<RsvInfo> list = new ArrayList<RsvInfo>();
     ReservationAdapter adapter;
-    //Controller controller = new Controller();
     String mJsonString;
     Intent intent;
     String hotelName;
@@ -40,9 +39,6 @@ public class NewReservation extends AppCompatActivity {
         setContentView(R.layout.new_reservation);
         intent = getIntent();
         hotelName = intent.getStringExtra("HotelName");
-
-        //Intent intent = getIntent();
-        //list = controller.new_checkRsv();
 
         GetData task = new GetData();
         task.execute();
@@ -84,12 +80,8 @@ public class NewReservation extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            //String searchKeyword1 = params[0]; //호텔 이름 받을 수 있으면 사용
-
             String serverURL = "http://qmdlrhdfyd.synology.me:8080/getReservation.php";
-            //String postParameters = "hotelname=" + searchKeyword1;
             String postParameters = "hotelname=" + hotelName;
-
 
             try {
                 URL url = new URL(serverURL);
@@ -156,11 +148,11 @@ public class NewReservation extends AppCompatActivity {
                 int pos = data.getIntExtra("Index", 0);
 
                 //데이터 받기
-                //int d = 0;
+                //d = 0 아무 결정 안한 상태
                 String result = data.getStringExtra("Decision");
                 if (result.equals("true")) { //0이 초기화, 1이 true, 2가 false
                     // RsvInfo의 d 값 true로 변경
-                    //d=1;
+                    //d=1 수락
 
                     InsertData task = new InsertData();
                     task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
@@ -168,18 +160,14 @@ public class NewReservation extends AppCompatActivity {
                 }
                 else if (result.equals("false")) {
                     // RsvInfo의 d 값 false로 변경
-                    //d=2;
+                    //d=2 거절
 
                     InsertData task = new InsertData();
                     task.execute("http://qmdlrhdfyd.synology.me:8080/answerReservation.php"
                             ,hotelName,Integer.toString(list.get(pos).getRsv_Num()),"2");
                 }
-
-                //int pos = data.getIntExtra("Index", 0);
                 list.remove(pos);
-                // 저장하도록 바꾸기
 
-                //controller.acceptOrReject(pos, d);
                 adapter.notifyDataSetChanged();
             }
         }
@@ -196,7 +184,6 @@ public class NewReservation extends AppCompatActivity {
                 int roomID = item.getInt("roomID");
                 String checkin = item.getString("checkin");
                 String checkout = item.getString("checkout");
-                //boolean meal = item.getInt("meal");
                 boolean meal;
                 if(item.getInt("meal")==1) meal = true;
                 else meal = false;
@@ -212,8 +199,6 @@ public class NewReservation extends AppCompatActivity {
             for(RsvInfo r : list){
                 System.out.println(r.getRoom_Num()+" "+r.getRsv_Num()+" "+r.getNumOfPeople());
             }
-            //mListViewList.setAdapter(adapter);
-
 
             adapter = new ReservationAdapter(this, R.layout.reservation_list, list);
             listView = (ListView) findViewById(R.id.listview);
@@ -269,14 +254,13 @@ public class NewReservation extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String hotelName = (String)params[1];
-            int rsvNum = Integer.valueOf(params[2]); //(String)params[2];
-            int decision = Integer.valueOf(params[3]); //(String)params[3];
+            int rsvNum = Integer.valueOf(params[2]);
+            int decision = Integer.valueOf(params[3]);
 
-            System.out.println("수락? 거절? "+hotelName+" 예약번호 No."+rsvNum+" 예약 결과:"+decision);
-            //String country = (String)params[2];
+            System.out.println("예약 결정 "+hotelName+" 예약번호 No."+rsvNum+" 예약 결과:"+decision);
 
             String serverURL = (String)params[0];
-            String postParameters = "hotelname="+hotelName+"&reservationNum="+rsvNum+"&status=" + decision;// + "&country=" + country;
+            String postParameters = "hotelname="+hotelName+"&reservationNum="+rsvNum+"&status=" + decision;
 
 
             try {

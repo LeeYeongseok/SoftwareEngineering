@@ -286,18 +286,14 @@ public class ManageRoom extends AppCompatActivity {
 
             if(params[3].equals(" ")){
                 //delete
-
                 postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum;
                 System.out.println("삭제: "+hotelName+" "+roomNum);
-
             }
             else{
                 //modify
-
                 int costPerDay = Integer.valueOf(params[3]);
                 String roomType = (String)params[4];
                 int maxGuests = Integer.valueOf(params[5]);
-                //String picture = " ";
 
                 postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum +"&price=" + costPerDay
                         + "&maxGuest=" + maxGuests + "&picture=" + " " + "&roomtype=" + roomType;

@@ -32,7 +32,6 @@ public class MainMenu extends AppCompatActivity {
             public final void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ManageRoom.class);
                 intent.putExtra("HotelName", hotelName);
-                //System.out.println("제대로 들어감? "+intent.getStringExtra("HotelName"));
                 startActivity(intent);
             }
         }));
