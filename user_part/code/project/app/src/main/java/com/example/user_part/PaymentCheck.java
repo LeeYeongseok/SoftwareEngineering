@@ -60,13 +60,16 @@ public class PaymentCheck extends AppCompatActivity {
      tv_inDate.setText(rsvCond.getCheckin_date().replaceAll("00:00:00", ""));
 
      tv_inTime = findViewById(R.id.tv_inTime);
-     tv_inTime.setText(selRoom.getITime());
+     String iTime = selRoom.getITime();
+     tv_inTime.setText(iTime.substring(0,iTime.length()-3));
+
 
      tv_outDate = findViewById(R.id.tv_outDate);
      tv_outDate.setText(rsvCond.getCheckout_date().replaceAll("00:00:00", ""));
 
      tv_outTime = findViewById(R.id.tv_outTime);
-     tv_outTime.setText(selRoom.getoTime());
+        String oTime = selRoom.getITime();
+        tv_outTime.setText(oTime.substring(0,oTime.length()-3));
 
 
 

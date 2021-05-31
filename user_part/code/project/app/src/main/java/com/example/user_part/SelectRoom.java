@@ -78,10 +78,14 @@ public class SelectRoom extends AppCompatActivity {
         tv_locationContent.setText(selroom.getLocation());
 
         tv_checkInTimeContent= findViewById(R.id.tv_checkInTimeContent);
-        tv_checkInTimeContent.setText(selroom.getITime());
+        String iTime = selroom.getITime();
+        tv_checkInTimeContent.setText(iTime.substring(0,iTime.length()-3));
+
 
         tv_checkOutTimeContent= findViewById(R.id.tv_checkOutTimeContent);
-        tv_checkOutTimeContent.setText(selroom.getoTime());
+        String oTime = selroom.getoTime();
+        tv_checkOutTimeContent.setText(oTime.substring(0,oTime.length()-3));
+
 
         tv_PriceContent= findViewById(R.id.tv_PriceContent);
         String Price = String.valueOf(selroom.getPriceOfDay());
@@ -98,6 +102,7 @@ public class SelectRoom extends AppCompatActivity {
         tv_reviewContent= findViewById(R.id.tv_reviewContent);
         try{
             tv_reviewContent.setText(selroom.getReview().get(0));
+            tv_reviewContent.setTextSize(6 * tv_reviewContent.getResources().getDisplayMetrics().density);
         } catch(Exception e){
             e.printStackTrace();
         }
