@@ -44,6 +44,7 @@ public class SearchHotel extends AppCompatActivity {
     private RsvCond rsvCond = new RsvCond();
     private ArrayList<MeetCond> meetCond = new ArrayList<>();
     private SimpleDateFormat dateFormat;
+    private static boolean mAsyncTask = false;
 
 
     @Override
@@ -75,7 +76,6 @@ public class SearchHotel extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //rsvCond.setCheckin_date(date_checkinlist.get(position));
                 try {
                     Date checkin_date = (Date) dateFormat.parse(date_checkinlist.get(position));
                     rsvCond.setCheckin_date(saveFormat.format(checkin_date)+" 00:00:00");
@@ -190,14 +190,15 @@ public class SearchHotel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 meetCond.clear();
+                //mAsyncTask = true;
                 DBConnection dbConnection = new DBConnection();
                 dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getLocation(), rsvCond.getDlocation(),
                         rsvCond.getNum()+"");
+
             }
         });
 
     }
-
 
     private class DBConnection extends AsyncTask<String, Void, String> {
 
@@ -307,13 +308,12 @@ public class SearchHotel extends AppCompatActivity {
                 meetCond.add(mc);
             }
 
-            if (!meetCond.isEmpty()){
-                Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
-                SearchHotel.this.startActivity(intent);}
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
+        SearchHotel.this.startActivity(intent);
     }
 
 

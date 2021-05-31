@@ -49,37 +49,40 @@ public class ShowRoom extends AppCompatActivity {
         meetCondView = (ListView) findViewById(R.id.roomListView);
         meetCondList = ((SearchHotel)SearchHotel.context_SearchHotel).getMeetCond();
 
-        WN wn = new WN();
-
-        int k = 0;
-        mAsyncEnd = true;
-        for( ; k<meetCondList.size(); k++){
-            if(mAsyncTaskExecute){
-                wn.mWait();
-            } mAsyncTaskExecute = true;
-            String url = meetCondList.get(k).getPicLink().replaceAll(" ", "");
-            if(url.length()!=0){
-                DownloadImage downloadImage = new DownloadImage(wn, meetCondList.get(k));
-                downloadImage.execute(url);
-            } else{
-                wn.mNotify();
-                mAsyncTaskExecute = false;
+        if(meetCondList.size()>0){
+            WN wn = new WN();
+            int k = 0;
+            mAsyncEnd = true;
+            for( ; k<meetCondList.size(); k++){
+                if(mAsyncTaskExecute){
+                    wn.mWait();
+                } mAsyncTaskExecute = true;
+                String url = meetCondList.get(k).getPicLink().replaceAll(" ", "");
+                if(url.length()!=0){
+                    DownloadImage downloadImage = new DownloadImage(wn, meetCondList.get(k));
+                    downloadImage.execute(url);
+                } else{
+                    wn.mNotify();
+                    mAsyncTaskExecute = false;
+                }
             }
+            if(mAsyncEnd){
+                end.mWait();}
+
+            MCAdapter = new MeetCondAdapter(getApplicationContext(), meetCondList);
+            meetCondView.setAdapter(MCAdapter);
+            meetCondView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    meetCond = (MeetCond) MCAdapter.getItem(position);
+                    Intent intent = new Intent(ShowRoom.this, SelectRoom.class);
+                    ShowRoom.this.startActivity(intent);
+                }
+
+            });
         }
-        if(mAsyncEnd){
-            end.mWait();}
 
-        MCAdapter = new MeetCondAdapter(getApplicationContext(), meetCondList);
-        meetCondView.setAdapter(MCAdapter);
-        meetCondView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                meetCond = (MeetCond) MCAdapter.getItem(position);
-                Intent intent = new Intent(ShowRoom.this, SelectRoom.class);
-                ShowRoom.this.startActivity(intent);
-            }
 
-        });
     }
 
     private class WN{
@@ -118,7 +121,6 @@ public class ShowRoom extends AppCompatActivity {
             System.out.println(picurl);
             try {
                 URL url = new URL("http://" + picurl);
-                //URL url = new URL("https://movie-phinf.pstatic.net/20161123_188/1479862185516tYkKO_JPEG/movie_image.jpg");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setConnectTimeout(8000);
                 httpURLConnection.setReadTimeout(8000);
