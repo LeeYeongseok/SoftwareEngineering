@@ -297,8 +297,8 @@ public class SearchHotel extends AppCompatActivity {
 
                 ArrayList<String> setRv = new ArrayList<String>();
                 for(int k=0; k< review.length(); k++){
-                    JSONObject rv = review.getJSONObject(k);
-                    String tmp = rv.getString("");
+                    //JSONObject rv = review.getJSONObject(k);
+                    String tmp = review.getString(k);
                     setRv.add(tmp); }
 
                 MeetCond mc = new MeetCond(hotelname, costPerDay, rating, itime, otime, picLink,

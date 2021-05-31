@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ShowRoom extends AppCompatActivity {
@@ -58,7 +59,10 @@ public class ShowRoom extends AppCompatActivity {
             } mAsyncTaskExecute = true;
             System.out.println("oncreate-index:"+k);
             DownloadImage downloadImage = new DownloadImage(wn, meetCondList.get(k));
-            downloadImage.execute(meetCondList.get(k).getPicLink());
+            String url = meetCondList.get(k).getPicLink().replaceAll(" ", "");
+            System.out.println("왜!!!!!"+ url + "?????" );
+            if(url!="") {
+                downloadImage.execute(url);}
         }
         if(mAsyncEnd){
             end.mWait();}
@@ -100,7 +104,7 @@ public class ShowRoom extends AppCompatActivity {
         }
     }
 
-    private class DownloadImage extends AsyncTask<String,Void, Bitmap> {
+    private class DownloadImage extends AsyncTask<String,Void, Bitmap>{
 
         private WN wn;
         private MeetCond meetCond;
@@ -114,11 +118,10 @@ public class ShowRoom extends AppCompatActivity {
         protected Bitmap doInBackground(String... strings) {
             Bitmap bmp = null;
             String picurl = strings[0];
-
-            //String s = strings[0];
+            System.out.println(picurl);
             try {
-                //URL url = new URL(s);
-                URL url = new URL("https://movie-phinf.pstatic.net/20161123_188/1479862185516tYkKO_JPEG/movie_image.jpg");
+                URL url = new URL("http://" + picurl);
+                //URL url = new URL("https://movie-phinf.pstatic.net/20161123_188/1479862185516tYkKO_JPEG/movie_image.jpg");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setConnectTimeout(8000);
                 httpURLConnection.setReadTimeout(8000);
@@ -131,7 +134,8 @@ public class ShowRoom extends AppCompatActivity {
                     is = httpURLConnection.getInputStream();
                 } else {
                     System.out.println("연결 실패");
-                    is = httpURLConnection.getErrorStream(); }
+                    is = httpURLConnection.getErrorStream();
+                }
 
                 bmp = BitmapFactory.decodeStream(is);
                 System.out.println("background");
@@ -142,9 +146,10 @@ public class ShowRoom extends AppCompatActivity {
                 mAsyncTaskExecute = false;
                 wn.mNotify();
 
-                if(meetCondList.get(meetCondList.size()-1) == meetCond){
-                    mAsyncEnd =false;
-                    end.mNotify();}
+                if (meetCondList.get(meetCondList.size() - 1) == meetCond) {
+                    mAsyncEnd = false;
+                    end.mNotify();
+                }
                 System.out.println("background 끝");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -164,7 +169,6 @@ public class ShowRoom extends AppCompatActivity {
             super.onPostExecute(result);
             System.out.println("on post execute");
         }
-
     }
 
     public MeetCond getMeetCond() {
