@@ -57,20 +57,17 @@ public class ShowRoom extends AppCompatActivity {
             if(mAsyncTaskExecute){
                 wn.mWait();
             } mAsyncTaskExecute = true;
-            System.out.println("oncreate-index:"+k);
-            DownloadImage downloadImage = new DownloadImage(wn, meetCondList.get(k));
             String url = meetCondList.get(k).getPicLink().replaceAll(" ", "");
-            System.out.println("왜!!!!!"+ url + "?????" );
-            if(url!="") {
-                downloadImage.execute(url);}
+            if(url.length()!=0){
+                DownloadImage downloadImage = new DownloadImage(wn, meetCondList.get(k));
+                downloadImage.execute(url);
+            } else{
+                wn.mNotify();
+                mAsyncTaskExecute = false;
+            }
         }
         if(mAsyncEnd){
             end.mWait();}
-
-        for(int i=0; i<meetCondList.size(); i++){
-            System.out.println("on create");
-            System.out.println(meetCondList.get(i).getPicture());
-        }
 
         MCAdapter = new MeetCondAdapter(getApplicationContext(), meetCondList);
         meetCondView.setAdapter(MCAdapter);
