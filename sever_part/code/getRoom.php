@@ -13,7 +13,20 @@ $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 if ($hotelName != "" ){ 
 
-    $query = "SELECT * FROM reservation WHERE hotel_name = '$hotelName' AND status = 0;";
+    $query = "SELECT * FROM hotelInfo WHERE name = '$hotelName';";
+
+    $stmt = $con->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if(!$result){
+        echo 'MySQL Error: ';
+        exit;
+    }
+    $hotelId = $result[0]['hotelID'];
+
+
+    $query = "SELECT * FROM roomInfo WHERE hotelID = $hotelId;";
 
     $stmt = $con->prepare($query);
     $stmt->execute();
@@ -24,15 +37,15 @@ if ($hotelName != "" ){
     while($i < count($result)){
         $row = $result[$i];
         array_push($data, 
-            array('reserNum'=>$row["reservation_num"],
-            'roomID'=>$row["roomID"],
-            'checkin'=>$row["startTime"],
-            'checkout'=>$row["endTime"],
-            'meal'=>$row["isMeal"],
-            'NumofPeople'=>$row["numGuests"]
+            array('roomID'=>$row["roomID"],
+            'costPerDay'=>$row["costPerDay"],
+            'roomType'=>$row["roomType"],
+            'maxGuests'=>$row["maxGuests"]
+            
             ));
     $i++;
     }
+
 
     if (!$android) {
         echo "<pre>"; 

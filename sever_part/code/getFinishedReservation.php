@@ -20,9 +20,9 @@ if ($hotelName != "" ){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     $i = 0;
+    $data = array();
     while($i < count($result)){
         $row = $result[$i];
-        $data = array();
         array_push($data, 
             array('reserNum'=>$row["reservation_num"],
             'roomID'=>$row["roomID"],
