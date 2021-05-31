@@ -159,6 +159,7 @@ public class ManageRoom extends AppCompatActivity {
                                                 Integer.toString(data.getIntExtra("Price", 0)), data.getStringExtra("RoomType"),
                                                 Integer.toString(data.getIntExtra("Capacity", 0)));
 
+
                     GetData task2 = new GetData();
                     task2.execute();
 
@@ -290,13 +291,22 @@ public class ManageRoom extends AppCompatActivity {
                 System.out.println("삭제: "+hotelName+" "+roomNum);
             }
             else{
-                //modify
+                //modify & add
+
                 int costPerDay = Integer.valueOf(params[3]);
                 String roomType = (String)params[4];
                 int maxGuests = Integer.valueOf(params[5]);
 
+                String img_url=null;
+                if(roomType.equals("싱글룸")){ img_url = "qmdlrhdfyd.synology.me:8080/image/roomImage2.jpg"; }
+                else if(roomType.equals("더블룸")){ img_url = "qmdlrhdfyd.synology.me:8080/image/roomImage1.jpg"; }
+                else if(roomType.equals("트리플룸")){ img_url = "qmdlrhdfyd.synology.me:8080/image/roomImage4.jpg"; }
+                else if(roomType.equals("스위트룸")){ img_url = "qmdlrhdfyd.synology.me:8080/image/roomImage5.jpg"; }
+                else { img_url = "qmdlrhdfyd.synology.me:8080/image/roomImage3.png"; }
+
+
                 postParameters = "hotelname=" + hotelName + "&roomID=" + roomNum +"&price=" + costPerDay
-                        + "&maxGuest=" + maxGuests + "&picture=" + " " + "&roomtype=" + roomType;
+                        + "&maxGuest=" + maxGuests + "&picture=" + img_url + "&roomtype=" + roomType;
             }
 
             try {
