@@ -12,9 +12,12 @@ $roomID = isset($_POST['roomID']) ? $_POST['roomID'] : '';
 $price = isset($_POST['price']) ? $_POST['price'] : '';
 $maxGuest = isset($_POST["maxGuest"]) ? $_POST["maxGuest"] : '';
 $picture = isset($_POST["picture"]) ? $_POST["picture"] : '';
+$roomtype = isset($_POST["roomtype"]) ? $_POST["roomtype"] : '';
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
-if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND $picture != ""){ 
+
+
+if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND $picture != "" AND $roomtype != ""){ 
 
     $query = "SELECT * FROM hotelInfo WHERE name = '$hotelname';";
 
@@ -23,25 +26,13 @@ if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND 
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if(!$result){
-        echo 'MySQL Error: ';
+        echo 'MySQL Error: hotelname';
         exit;
     }
 
     $hotelId = $result[0]['hotelID'];
-
-    $query = "SELECT * FROM hotelInfo WHERE name = $hoteId;";
-
-    $stmt = $con->prepare($query);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if(!$result){
-        echo 'MySQL Error: ';
-        exit;
-    }
-    $hotelId = $result[0]['hotelID'];
-
-    $query = "INSERT INTO roomInfo (hotelID, roomID, costPerday, maxGuests, photo_path) VALUES ($hotelId, $roomID, $price, $maxGuest, '$picture')";
+    
+    $query = "INSERT INTO roomInfo (hotelID, roomID, costPerday, maxGuests, photo_path, roomType) VALUES ($hotelId, $roomID, $price, $maxGuest, '$picture', '$roomtype')";
     $stmt = $con->prepare($query);
     $stmt->execute();
 }
@@ -68,7 +59,8 @@ if (!$android){
          <p><label>방호수 : <input type="text" name="roomID"></label></p>
          <p><label>가격 : <input type="text" name="price"></label></p>
          <p><label>최대인원수 : <input type="text" name="maxGuest"></label></p>
-         <p><label>사진 링크 : <input type="text" name="picture"></label></p>
+         <p><label>사진 : <input type="text" name="picture"></label></p>
+         <p><label>방타입 : <input type="text" name="roomtype"></label></p>
          <input type = "submit" />
       </form>
    
