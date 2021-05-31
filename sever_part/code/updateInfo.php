@@ -12,9 +12,10 @@ $roomID = isset($_POST['roomID']) ? $_POST['roomID'] : '';
 $price = isset($_POST['price']) ? $_POST['price'] : '';
 $maxGuest = isset($_POST["maxGuest"]) ? $_POST["maxGuest"] : '';
 $picture = isset($_POST["picture"]) ? $_POST["picture"] : '';
+$roomtype = isset($_POST["roomtype"]) ? $_POST["roomtype"] : '';
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
-if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND $picture != ""){ 
+if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND $picture != "" AND $roomtype != ""){ 
 
     $query = "SELECT * FROM hotelInfo WHERE name = '$hotelname';";
 
@@ -28,7 +29,7 @@ if ($hotelname != "" AND $roomID != "" AND $price != "" AND $maxGuest != "" AND 
     }
     $hotelId = $result[0]['hotelID'];
 
-    $query = "UPDATE roomInfo SET costPerday = $price, maxGuests = $maxGuest, photo_path = '$picture' WHERE hotelID = $hotelId AND roomID = $roomID;";
+    $query = "UPDATE roomInfo SET costPerday = $price, maxGuests = $maxGuest, photo_path = '$picture', roomType = '$roomtype' WHERE hotelID = $hotelId AND roomID = $roomID;";
     $stmt = $con->prepare($query);
     $stmt->execute();
 }
@@ -56,6 +57,7 @@ if (!$android){
          <p><label>가격 : <input type="text" name="price"></label></p>
          <p><label>최대인원수 : <input type="text" name="maxGuest"></label></p>
          <p><label>사진 링크 : <input type="text" name="picture"></label></p>
+         <p><label>방타입 : <input type="text" name="roomtype"></label></p>
          <input type = "submit" />
       </form>
    

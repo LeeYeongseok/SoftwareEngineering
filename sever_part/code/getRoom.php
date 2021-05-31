@@ -1,0 +1,91 @@
+<?php  
+error_reporting(E_ALL); 
+ini_set('display_errors',1); 
+
+include('dbcon.php');
+
+
+
+//POST 값을 읽어온다.
+$hotelName = isset($_POST["hotelname"]) ? $_POST["hotelname"] : '';
+$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+
+if ($hotelName != "" ){ 
+
+    $query = "SELECT * FROM hotelInfo WHERE name = '$hotelName';";
+
+    $stmt = $con->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if(!$result){
+        echo 'MySQL Error: ';
+        exit;
+    }
+    $hotelId = $result[0]['hotelID'];
+
+
+    $query = "SELECT * FROM roomInfo WHERE hotelID = $hotelId;";
+
+    $stmt = $con->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $i = 0;
+    $data = array();
+    while($i < count($result)){
+        $row = $result[$i];
+        array_push($data, 
+            array('roomID'=>$row["roomID"],
+            'costPerDay'=>$row["costPerDay"],
+            'roomType'=>$row["roomType"],
+            'maxGuests'=>$row["maxGuests"]
+            
+            ));
+    $i++;
+    }
+
+
+    if (!$android) {
+        echo "<pre>"; 
+        print_r($data); 
+        echo '</pre>';
+    }else
+    {
+        header('Content-Type: application/json; charset=utf8');
+        $json = json_encode(array("webnautes"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+        echo $json;
+    }
+    
+}
+else {
+    echo "검색할 지역을 입력하세요 ";
+}
+
+?>
+
+
+
+<?php
+
+$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+if (!$android){
+?>
+
+<html>
+   <body>
+   
+      <form action="<?php $_PHP_SELF ?>" method="POST">
+         <p><label>호텔이름 : <input type="text" name="hotelname"></label></p>
+         <input type = "submit" />
+      </form>
+   
+   </body>
+</html>
+<?php
+}
+
+   
+?>
