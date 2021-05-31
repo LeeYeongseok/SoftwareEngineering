@@ -1,11 +1,16 @@
 package com.example.user_part;
 
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+
 public class MeetCond {
     private String hotelName; //호텔 이름
     private int priceOfDay; //1박 당 가격
     private float grade;    //평점
-    private String review;  //리뷰
-    private int picture;   //사진
+    private ArrayList<String> review;  //리뷰
+    private Bitmap picture;   //사진
+    private String picLink; //사진 링크
     private String iTime;  //체크인 시간
     private String oTime;  //체크아웃 시간
     private String exFacility; //부대시설
@@ -13,6 +18,14 @@ public class MeetCond {
     private String roomType; //방 타입
     private boolean meal;   //식사
     private int mealPrice;   //식사가격
+
+    public String getPicLink() {
+        return picLink;
+    }
+
+    public void setPicLink(String picLink) {
+        this.picLink = picLink;
+    }
 
     public String getiTime() {
         return iTime;
@@ -35,9 +48,9 @@ public class MeetCond {
     public MeetCond(String hotelName,
                     int priceOfDay,
                     float grade,
-                    int picture,
                     String iTime,
                     String oTime,
+                    String picLink,
                     String exFacility,
                     String location,
                     String roomType,
@@ -47,9 +60,9 @@ public class MeetCond {
         this.hotelName = hotelName;
         this.priceOfDay = priceOfDay;
         this.grade = grade;
-        this.picture = picture;
         this.iTime = iTime;
         this.oTime = oTime;
+        this.picLink = picLink;
         this.roomType = roomType;
         this.location = location;
         this.exFacility = exFacility;
@@ -98,19 +111,19 @@ public class MeetCond {
         this.grade = grade;
     }
 
-    public String getReview() {
+    public ArrayList<String> getReview() {
         return review;
     }
 
-    public void setReview(String review) {
+    public void setReview(ArrayList<String> review) {
         this.review = review;
     }
 
-    public int getPicture() {
+    public Bitmap getPicture() {
         return picture;
     }
 
-    public void setPicture(int picture) {
+    public void setPicture(Bitmap picture) {
         this.picture = picture;
     }
 

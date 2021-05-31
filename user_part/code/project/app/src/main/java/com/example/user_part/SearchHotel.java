@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -21,10 +23,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.text.ParseException;
@@ -40,6 +44,7 @@ public class SearchHotel extends AppCompatActivity {
     private RsvCond rsvCond = new RsvCond();
     private ArrayList<MeetCond> meetCond = new ArrayList<>();
     private SimpleDateFormat dateFormat;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,15 +191,12 @@ public class SearchHotel extends AppCompatActivity {
             public void onClick(View v) {
                 meetCond.clear();
                 DBConnection dbConnection = new DBConnection();
-                dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getDlocation(),
+                dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getLocation(), rsvCond.getDlocation(),
                         rsvCond.getNum()+"");
-                /*dbConnection.execute(rsvCond.getCheckin_date(), rsvCond.getCheckout_date(), rsvCond.getLocation()+" "+rsvCond.getDlocation(),
-                        rsvCond.getNum()+"");*/
             }
         });
 
     }
-
 
 
     private class DBConnection extends AsyncTask<String, Void, String> {
@@ -207,11 +209,7 @@ public class SearchHotel extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (result == null) {
-                System.out.println("*****************result is null!********************");
-            } else {
-                SaveResult(result);
-            }
+            SaveResult(result);
         }
 
         @Override
@@ -220,15 +218,14 @@ public class SearchHotel extends AppCompatActivity {
             //서버에서 조건에 맞는 방을 가져옴
             String iDate = params[0];
             String oDate = params[1];
-            String loc = params[2];
-            String num = params[3];
+            String loc1 = params[2];
+            String loc2 = params[3];
+            String num = params[4];
 
-            System.out.println(iDate + oDate + loc + num);
+            System.out.println(iDate + oDate + loc1 + loc2 + num);
             String server_url = "http://qmdlrhdfyd.synology.me:8080/searchRoom.php";
-            /*String postParameters = "date1=" + "2021-05-28 00:00:00" + "&date2=" + "2021-05-29 00:00:00" +
-                    "&location=" + "동작구" + "&maxGuest=" + "1";*/
             String postParameters = "date1=" + iDate + "&date2=" + oDate +
-                    "&location=" + loc + "&maxGuest=" + num;
+                    "&location=" + loc1 + "&location2=" + loc2 + "&maxGuest=" + num;
 
             try {
                 URL url = new URL(server_url);
@@ -275,26 +272,45 @@ public class SearchHotel extends AppCompatActivity {
 
     private void SaveResult(String response) {
 
-        try {
-            response = response.replaceAll("</pre></pre>", "");
 
+        try {
+            System.out.println(response);
             JSONObject JsonObject = new JSONObject(response);
             JSONArray JsonArray = JsonObject.getJSONArray("webnautes");
 
             for (int i = 0; i < JsonArray.length(); i++) {
                 JSONObject r = JsonArray.getJSONObject(i);
 
-                String hotelID = r.getString("hotelID");
+                String hotelname = r.getString("hotelname");
                 int costPerDay = r.getInt("costPerDay");
-                String roomID = r.getString("roomID");
-                MeetCond mc = new MeetCond(hotelID, costPerDay, (float) -1.0, R.drawable.room2, "", "",
-                        "", "", roomID, true, -1, -1);
+                String roomType = r.getString("roomType");
+                int maxGuest = r.getInt("maxGuest");
+                String loc = r.getString("location");
+                String loc2=  r.getString("location2");
+                int mealCost = r.getInt("mealCost");
+                float rating = (float) r.getInt("rating");
+                String itime = r.getString("checkin");
+                String otime = r.getString("checkout");
+                String facility = r.getString("facility");
+                JSONArray review = r.getJSONArray("review");
+                String picLink = r.getString("pictureLink");
+
+                ArrayList<String> setRv = new ArrayList<String>();
+                for(int k=0; k< review.length(); k++){
+                    JSONObject rv = review.getJSONObject(k);
+                    String tmp = rv.getString("");
+                    setRv.add(tmp); }
+
+                MeetCond mc = new MeetCond(hotelname, costPerDay, rating, itime, otime, picLink,
+                        facility, loc+" "+loc2, roomType, true, mealCost, maxGuest);
+                mc.setReview(setRv);
                 meetCond.add(mc);
             }
 
             if (!meetCond.isEmpty()){
                 Intent intent = new Intent(SearchHotel.this, ShowRoom.class);
                 SearchHotel.this.startActivity(intent);}
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -22,11 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SelectRoom extends AppCompatActivity {
 
-    /*SelRoom selroom = new SelRoom("a호텔", 50000, (float) 4.0,"굉장히 좋은 방이네",
-            R.drawable.room1, "15:00", "11:00", "수영장", "서울시 동작구 흑석로 84",
-            "203", true, 7000,1); //임시데이터터*/
-    /*RoomOpt roomopt = new RoomOpt (3,5); //임시데이터*/
-
     MeetCond selroom = ((ShowRoom)ShowRoom.context_ShowRoom).getMeetCond();
     RsvCond rsvCond = ((SearchHotel)SearchHotel.context_SearchHotel).getRsvCond();
     RoomOpt roomopt = new RoomOpt(rsvCond.getStayNight(), rsvCond.getNum());
@@ -53,10 +48,10 @@ public class SelectRoom extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_room);
         context_SelectRoom = this;
-
 
         Calculator calculator = new Calculator(roomopt, selroom);
 
@@ -65,7 +60,13 @@ public class SelectRoom extends AppCompatActivity {
         String totalPrice =  String.valueOf(intTotalPrice);
         tv_totalPriceContent.setText(totalPrice + "원");
 
-        hotelImage = findViewById(R.id.hotelImage);
+        hotelImage = findViewById((R.id.hotelImage));
+        try{
+            System.out.println(selroom.getPicture());
+            hotelImage.setImageBitmap(selroom.getPicture());
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
         tv_hotelNameContents = findViewById(R.id.tv_hotelNameContents);
         tv_hotelNameContents.setText(selroom.getHotelName());
@@ -95,7 +96,11 @@ public class SelectRoom extends AppCompatActivity {
         tv_grade.setText("(" +grade + "/5.0)");
 
         tv_reviewContent= findViewById(R.id.tv_reviewContent);
-        tv_reviewContent.setText(selroom.getReview());
+        try{
+            tv_reviewContent.setText(selroom.getReview().get(0));
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
         rg_mealSel = findViewById(R.id.rg_mealSel);
         radioButton_op1= findViewById(R.id.radioButton_op1);
